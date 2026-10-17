@@ -16,6 +16,10 @@ const allowedOrigins = rawOrigins
   .map(origin => origin.trim())
   .filter(Boolean);
 
+if (process.env.RENDER_EXTERNAL_URL && !allowedOrigins.includes(process.env.RENDER_EXTERNAL_URL)) {
+  allowedOrigins.push(process.env.RENDER_EXTERNAL_URL);
+}
+
 export const config = {
   port: process.env.PORT ? parseInt(process.env.PORT, 10) : 5000,
   nodeEnv: process.env.NODE_ENV || 'development',
