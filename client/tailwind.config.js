@@ -8,42 +8,86 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: {
-          DEFAULT: '#060913',
-          subtle: '#0c1222',
-          surface: '#111827',
-          card: 'rgba(15, 23, 42, 0.7)',
+        // Core Visual Identity (Artistic Editorial)
+        ivory: {
+          DEFAULT: '#F5F0E7',
+          light: '#FAF7F2',
+          dark: '#EAE2D5',
         },
-        accent: {
-          blue: {
-            DEFAULT: '#38bdf8',
-            hover: '#0ea5e9',
-            muted: 'rgba(56, 189, 248, 0.15)',
+        champagne: {
+          DEFAULT: '#C7A052',
+          light: '#E2BF7D',
+          dark: '#A68239',
+          muted: 'rgba(199, 160, 82, 0.18)',
+        },
+        charcoal: {
+          DEFAULT: '#252522',
+          muted: '#5A5A54',
+          subtle: '#8C8C84',
+          faint: '#C2C2BA',
+        },
+        sand: {
+          DEFAULT: '#D9CBB7',
+          light: '#E6DC CD',
+          dark: '#C5B49D',
+          surface: 'rgba(217, 203, 183, 0.45)',
+        },
+        // Character Theme Accents (Harmonized with ivory & champagne)
+        theme: {
+          iron: {
+            primary: '#8B1E24',
+            light: '#A62B32',
+            dark: '#601217',
+            gold: '#C7A052',
+            bg: '#F3ECE4',
+            surface: 'rgba(139, 30, 36, 0.06)',
+            border: 'rgba(139, 30, 36, 0.2)',
           },
-          violet: {
-            DEFAULT: '#a855f7',
-            hover: '#9333ea',
-            muted: 'rgba(168, 85, 247, 0.15)',
+          batman: {
+            primary: '#2B2D33',
+            light: '#3E414A',
+            dark: '#1B1C20',
+            silver: '#9CA3AF',
+            bg: '#ECE9E2',
+            surface: 'rgba(43, 45, 51, 0.06)',
+            border: 'rgba(43, 45, 51, 0.2)',
+          },
+          hulk: {
+            primary: '#264E36',
+            light: '#35694A',
+            dark: '#173322',
+            sage: '#8F9F88',
+            bg: '#ECF0EA',
+            surface: 'rgba(38, 78, 54, 0.06)',
+            border: 'rgba(38, 78, 54, 0.2)',
+          },
+          superman: {
+            primary: '#1D4570',
+            light: '#285C94',
+            dark: '#122D4B',
+            crimson: '#A62626',
+            coolwhite: '#F0F4F8',
+            bg: '#EAF0F6',
+            surface: 'rgba(29, 69, 112, 0.06)',
+            border: 'rgba(29, 69, 112, 0.2)',
           },
         },
-        border: {
-          subtle: 'rgba(255, 255, 255, 0.08)',
-          glow: 'rgba(56, 189, 248, 0.3)',
-        },
-      },
-      boxShadow: {
-        'glow-blue': '0 0 30px -5px rgba(56, 189, 248, 0.25)',
-        'glow-violet': '0 0 30px -5px rgba(168, 85, 247, 0.25)',
-        'glow-combo': '0 0 40px -10px rgba(56, 189, 248, 0.2), 0 0 40px -10px rgba(168, 85, 247, 0.2)',
-        'card-inner': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.08)',
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+        display: ['Cinzel', 'serif'],
+        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
-      backgroundImage: {
-        'grid-pattern': "radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
-        'radial-gradient-glow': 'radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15), transparent 50%)',
+      boxShadow: {
+        'editorial': '0 20px 40px -15px rgba(37, 37, 34, 0.07)',
+        'editorial-hover': '0 30px 60px -20px rgba(37, 37, 34, 0.12)',
+        'paper': '0 1px 3px rgba(37, 37, 34, 0.05), 0 10px 25px -5px rgba(37, 37, 34, 0.04)',
+        'character': '0 25px 50px -12px rgba(37, 37, 34, 0.15)',
+      },
+      letterSpacing: {
+        'cinematic': '0.2em',
+        'editorial': '0.08em',
       },
     },
   },

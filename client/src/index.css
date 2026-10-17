@@ -4,43 +4,83 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
   }
-  
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #F5F0E7;
+  }
+
   body {
-    @apply bg-canvas text-slate-200 font-sans;
-    background-color: #060913;
+    @apply bg-ivory text-charcoal font-sans antialiased;
+    background-color: #F5F0E7;
+    color: #252522;
+    overflow-x: hidden;
+  }
+
+  /* Editorial heading styles */
+  h1, h2, h3, h4 {
+    @apply font-serif tracking-tight text-charcoal;
   }
 }
 
-/* Glassmorphism & Bento surface utility classes */
-.bento-card {
-  position: relative;
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+/* Subtle paper texture noise pattern simulation */
+.bg-editorial-grain {
+  background-image: radial-gradient(rgba(37, 37, 34, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-.bento-card:hover {
-  border-color: rgba(56, 189, 248, 0.3);
-  box-shadow: 0 0 30px -10px rgba(56, 189, 248, 0.15);
-  transform: translateY(-2px);
+/* Thin editorial borders */
+.border-editorial {
+  border-color: rgba(37, 37, 34, 0.12);
 }
 
-/* Custom subtle scrollbar */
+.border-editorial-subtle {
+  border-color: rgba(37, 37, 34, 0.06);
+}
+
+.border-champagne-subtle {
+  border-color: rgba(199, 160, 82, 0.28);
+}
+
+/* Editorial surface card */
+.editorial-surface {
+  background-color: rgba(250, 247, 242, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(37, 37, 34, 0.09);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-surface:hover {
+  border-color: rgba(199, 160, 82, 0.4);
+  box-shadow: 0 15px 35px -10px rgba(37, 37, 34, 0.08);
+}
+
+/* Refined custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #060913;
+  background: #EAE2D5;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #C7A052;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #A68239;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
