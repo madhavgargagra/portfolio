@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar.jsx';
 import HeroSection from '../components/HeroSection.jsx';
 import ProjectShowcase from '../components/ProjectShowcase.jsx';
 import AboutSection from '../components/AboutSection.jsx';
+import TimelineSection from '../components/TimelineSection.jsx';
 import Footer from '../components/Footer.jsx';
 
 /**
@@ -13,7 +14,8 @@ import Footer from '../components/Footer.jsx';
  * 1. Landing Page (Hero with animated intro & CV download)
  * 2. Professional Project Showcase (MERN & systems engineering grid)
  * 3. Profile & Skills (Categorized proficiencies with animated indicators)
- * 4. Refined Footer with Express backend status
+ * 4. Education & Experience Timeline (Chronological academic & project milestones)
+ * 5. Refined Footer with Express backend status
  */
 export default function HomePage() {
   return (
@@ -23,6 +25,7 @@ export default function HomePage() {
         <HeroSection />
         <ProjectShowcase />
         <AboutSection />
+        <TimelineSection />
       </main>
       <Footer />
     </div>

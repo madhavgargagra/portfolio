@@ -21,6 +21,7 @@ export default function Navbar() {
     { label: 'Overview', href: '#hero' },
     { label: 'Projects', href: '#showcase' },
     { label: 'About & Skills', href: '#about' },
+    { label: 'Timeline', href: '#timeline' },
   ];
 
   return (
