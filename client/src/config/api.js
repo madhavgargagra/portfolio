@@ -25,4 +25,5 @@ export const API_ENDPOINTS = {
   health: getApiUrl('/api/health'),
   contact: getApiUrl('/api/contact'),
   resumePdf: getApiUrl('/public/resumes/madhav-garg-resume.pdf'),
+  resumeDocx: getApiUrl('/public/resumes/madhav-garg-resume.docx'),
 };

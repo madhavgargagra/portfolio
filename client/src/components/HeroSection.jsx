@@ -73,15 +73,27 @@ export default function HeroSection() {
                 <Compass className="w-4 h-4 text-[#C7A052] group-hover:text-white" />
               </a>
 
-              {/* Secondary CV Download CTA */}
-              <button
-                onClick={handleCvDownload}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-[#252522]/20 dark:border-white/20 bg-[#FAF7F2] dark:bg-[#191C22] text-sm font-sans font-medium text-[#252522] dark:text-[#E6E4DE] hover:border-[#C7A052] hover:bg-white dark:hover:bg-[#121316] transition-all w-full sm:w-auto"
-                title="Served via Express backend routes: server/public/resumes/madhav-garg-resume.pdf"
-              >
-                <FileDown className="w-4 h-4 text-[#C7A052]" />
-                <span>Download Resume (PDF)</span>
-              </button>
+              {/* Secondary CV Download CTAs (PDF & DOCX) */}
+              <div className="inline-flex items-center rounded-full border border-[#252522]/20 dark:border-white/20 bg-[#FAF7F2] dark:bg-[#191C22] p-1 shadow-xs">
+                <button
+                  type="button"
+                  onClick={() => window.open(API_ENDPOINTS.resumePdf, '_blank')}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-mono font-medium text-[#252522] dark:text-[#E6E4DE] hover:text-[#C7A052] hover:bg-white dark:hover:bg-[#121316] transition-all"
+                  title="Download Resume in PDF format"
+                >
+                  <FileDown className="w-3.5 h-3.5 text-[#C7A052]" />
+                  <span>Resume (PDF)</span>
+                </button>
+                <span className="text-[#252522]/25 dark:text-white/20 select-none">|</span>
+                <button
+                  type="button"
+                  onClick={() => window.open(API_ENDPOINTS.resumeDocx, '_blank')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full text-xs font-mono text-[#252522]/75 dark:text-[#E6E4DE]/75 hover:text-[#C7A052] hover:bg-white dark:hover:bg-[#121316] transition-all"
+                  title="Download Resume in Word DOCX format"
+                >
+                  <span>DOCX</span>
+                </button>
+              </div>
             </motion.div>
 
             {/* Micro Details */}

@@ -60,7 +60,8 @@ app.get('/api/info', (req, res) => {
     endpoints: {
       health: 'GET /api/health',
       contact: 'POST /api/contact',
-      resume: 'GET /public/resumes/madhav-garg-resume.pdf',
+      resumePdf: 'GET /public/resumes/madhav-garg-resume.pdf',
+      resumeDocx: 'GET /public/resumes/madhav-garg-resume.docx',
     },
   });
 });
