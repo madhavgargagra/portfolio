@@ -4,10 +4,12 @@
   "description": "Full-Stack MERN Developer Portfolio for Madhav",
   "private": true,
   "scripts": {
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server run start",
+    "build:client": "npm --prefix client run build",
     "client": "npm --prefix client run dev",
     "server": "npm --prefix server run dev",
     "server:start": "npm --prefix server run start",
-    "build:client": "npm --prefix client run build",
     "install:all": "npm --prefix client install && npm --prefix server install"
   },
   "keywords": [
@@ -17,8 +19,9 @@
     "vite",
     "express",
     "tailwind",
-    "framer-motion"
+    "framer-motion",
+    "mongodb"
   ],
-  "author": "Madhav",
+  "author": "Madhav Garg",
   "license": "MIT"
 }

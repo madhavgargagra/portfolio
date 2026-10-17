@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import { config } from './config/env.js';
@@ -13,14 +14,23 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Security and CORS configuration
+// Security and CORS configuration with multi-origin production support
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. mobile apps, curl, postman) or matching dev client
-    if (!origin || origin.startsWith('http://localhost') || origin === config.clientUrl) {
+    // Allow requests with no origin (e.g. curl, postman, same-origin monolithic deployments)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const isAllowed = 
+      config.allowedOrigins.includes(origin) ||
+      origin === config.clientUrl ||
+      origin.startsWith('http://localhost:');
+
+    if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error('Blocked by CORS policy'));
+      callback(new Error(`Blocked by CORS policy: Origin ${origin} not whitelisted.`));
     }
   },
   credentials: true,
@@ -30,16 +40,23 @@ app.use(cors({
 app.use(express.json({ limit: '50kb' }));
 app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 
-// Serve static assets (e.g., resumes, uploads)
+// Serve static backend assets (resumes, public downloads)
 const publicDir = path.join(__dirname, '../public');
 app.use('/public', express.static(publicDir));
 
-// Root info route
-app.get('/', (req, res) => {
+// Serve production client build if compiled
+const clientDistDir = path.join(__dirname, '../../client/dist');
+const hasClientBuild = fs.existsSync(clientDistDir);
+
+if (hasClientBuild) {
+  app.use(express.static(clientDistDir));
+}
+
+// API Health / documentation info route (available if no frontend or accessed directly)
+app.get('/api/info', (req, res) => {
   res.status(200).json({
     service: 'Madhav Portfolio REST API',
     version: '1.0.0',
-    documentation: '/api/health',
     endpoints: {
       health: 'GET /api/health',
       contact: 'POST /api/contact',
@@ -51,7 +68,26 @@ app.get('/', (req, res) => {
 // Mount modular API routes
 app.use('/api', apiRoutes);
 
-// Fallback 404 handler
+// Fallback for SPA routing in unified production deployments
+if (hasClientBuild) {
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/public')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistDir, 'index.html'));
+  });
+} else {
+  // If client is not compiled, root route serves API info
+  app.get('/', (req, res) => {
+    res.status(200).json({
+      service: 'Madhav Portfolio REST API',
+      status: 'active',
+      health: '/api/health',
+    });
+  });
+}
+
+// Fallback 404 handler for unmatched API routes
 app.use(notFoundHandler);
 
 // Global Error Handler
@@ -61,7 +97,7 @@ app.use(errorHandler);
 connectDB();
 
 const server = app.listen(config.port, () => {
-  console.log(`[API Server] Running on http://localhost:${config.port} (Environment: ${config.nodeEnv})`);
+  console.log(`[API Server] Running on port ${config.port} (Environment: ${config.nodeEnv})`);
   console.log(`[API Server] Health Check: http://localhost:${config.port}/api/health`);
 });
 

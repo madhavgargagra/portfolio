@@ -13,6 +13,8 @@ import {
   Code2
 } from 'lucide-react';
 
+import { API_ENDPOINTS } from '../config/api.js';
+
 export default function FoundationPage() {
   const [apiStatus, setApiStatus] = useState({ checking: true, live: false, data: null, error: null });
 
@@ -20,7 +22,7 @@ export default function FoundationPage() {
     // Quick test against server health endpoint
     const checkHealth = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/health', { method: 'GET' });
+        const response = await fetch(API_ENDPOINTS.health, { method: 'GET' });
         if (response.ok) {
           const data = await response.json();
           setApiStatus({ checking: false, live: true, data, error: null });

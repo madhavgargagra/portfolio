@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDown, FileDown, Sparkles, Code2, Layers, Cpu, Compass } from 'lucide-react';
+import { API_ENDPOINTS } from '../config/api.js';
 
 export default function HeroSection() {
   const handleCvDownload = () => {
-    // Connects to Express resume download route served from server/public/resumes/
-    window.open('http://localhost:5000/public/resumes/madhav-garg-resume.pdf', '_blank');
+    // Dynamic resume route supporting local, split, and unified production deployments
+    window.open(API_ENDPOINTS.resumePdf, '_blank');
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUp, Server, ShieldCheck } from 'lucide-react';
 import Logo from './Logo.jsx';
+import { API_ENDPOINTS } from '../config/api.js';
 
 export default function Footer() {
   const [serverHealth, setServerHealth] = useState({ checked: false, online: false });
@@ -8,7 +9,7 @@ export default function Footer() {
   useEffect(() => {
     const testHealth = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/health');
+        const res = await fetch(API_ENDPOINTS.health);
         if (res.ok) {
           setServerHealth({ checked: true, online: true });
         } else {

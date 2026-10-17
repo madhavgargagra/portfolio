@@ -20,6 +20,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { sendContactMessage } from '../services/contactService.js';
+import { API_ENDPOINTS } from '../config/api.js';
 
 // Standard RFC 5322-compliant email pattern for client validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -59,7 +60,7 @@ export default function ContactSection() {
     let isMounted = true;
     const checkStatus = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/health');
+        const res = await fetch(API_ENDPOINTS.health);
         if (res.ok) {
           const data = await res.json();
           if (isMounted) {

@@ -6,11 +6,11 @@
  * and structured payload formatting.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API_ENDPOINTS, API_BASE_URL } from '../config/api.js';
 
 export async function sendContactMessage({ name, email, message }) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/contact`, {
+    const response = await fetch(API_ENDPOINTS.contact, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export async function sendContactMessage({ name, email, message }) {
       success: false,
       status: 0,
       error: 'Network Failure',
-      message: 'Unable to connect to the backend server. Please verify your internet connection or ensure the Express API is running at http://localhost:5000.',
+      message: `Unable to connect to the backend server (${API_BASE_URL || 'same-origin'}). Please verify your internet connection or backend deployment status.`,
       code: 'NETWORK_ERROR',
     };
   }
