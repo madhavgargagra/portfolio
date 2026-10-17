@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { 
   ExternalLink, 
   Layers, 
-  ChevronRight, 
-  ChevronLeft, 
-  ShieldAlert, 
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  MousePointerClick
 } from 'lucide-react';
 import { projectsData } from '../data/projectsData.js';
 import CharacterVisual from './CharacterVisual.jsx';
@@ -19,168 +17,145 @@ const GithubIcon = ({ className = 'w-3.5 h-3.5' }) => (
 );
 
 export default function ProjectShowcase() {
-  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-  const [activeFrameIndex, setActiveFrameIndex] = useState(0); // 0: Left, 1: Front, 2: Right
-  const currentProject = projectsData[activeProjectIndex];
   const containerRef = useRef(null);
 
-  // Switch to next/previous frame
-  const handleNextFrame = () => {
-    if (activeFrameIndex < 2) {
-      setActiveFrameIndex((prev) => prev + 1);
-    } else if (activeProjectIndex < projectsData.length - 1) {
-      // Transition directly to next project's left profile (frame 0), avoiding back view
-      setActiveProjectIndex((prev) => prev + 1);
-      setActiveFrameIndex(0);
-    } else {
-      // Loop to beginning
-      setActiveProjectIndex(0);
-      setActiveFrameIndex(0);
-    }
-  };
+  // States driven primarily by scroll
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [activeFrameIndex, setActiveFrameIndex] = useState(0); // 0: Left, 1: Front, 2: Right
+  const [scrollPercent, setScrollPercent] = useState(0);
 
-  const handlePrevFrame = () => {
-    if (activeFrameIndex > 0) {
-      setActiveFrameIndex((prev) => prev - 1);
-    } else if (activeProjectIndex > 0) {
-      setActiveProjectIndex((prev) => prev - 1);
-      setActiveFrameIndex(2);
-    }
-  };
+  // Framer Motion scroll tracking
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
 
-  // Keyboard navigation support for accessibility
+  // Calculate active character and perspective continuously from scroll progress
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      // Only when container is in viewport
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        if (e.key === 'ArrowRight') {
-          handleNextFrame();
-        } else if (e.key === 'ArrowLeft') {
-          handlePrevFrame();
-        }
+    const unsubscribe = scrollYProgress.on('change', (latest) => {
+      // Clamp between 0 and 0.9999
+      const progress = Math.min(0.9999, Math.max(0, latest));
+      setScrollPercent(Math.round(progress * 100));
+
+      // 4 projects across the scroll span
+      const totalProjects = projectsData.length;
+      const rawProjectIndex = progress * totalProjects;
+      const projIdx = Math.min(totalProjects - 1, Math.floor(rawProjectIndex));
+
+      // Within each project, 3 perspective stages:
+      // 0.0 - 0.33 -> Left Profile
+      // 0.33 - 0.66 -> Front-Facing
+      // 0.66 - 1.00 -> Right Profile
+      const subProgress = rawProjectIndex - projIdx;
+      let frameIdx = 0;
+      if (subProgress < 0.33) {
+        frameIdx = 0; // Left
+      } else if (subProgress < 0.66) {
+        frameIdx = 1; // Front
+      } else {
+        frameIdx = 2; // Right
       }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeProjectIndex, activeFrameIndex]);
+
+      setActiveProjectIndex(projIdx);
+      setActiveFrameIndex(frameIdx);
+    });
+
+    return () => unsubscribe();
+  }, [scrollYProgress]);
+
+  const currentProject = projectsData[activeProjectIndex];
+  const currentFrame = currentProject.frames[activeFrameIndex];
+
+  // Optional manual jump for accessibility
+  const jumpToProject = (projIdx, frameIdx = 0) => {
+    if (!containerRef.current) return;
+    const containerTop = containerRef.current.offsetTop;
+    const totalHeight = containerRef.current.offsetHeight - window.innerHeight;
+    const targetProgress = (projIdx + frameIdx / 3) / projectsData.length;
+    window.scrollTo({
+      top: containerTop + targetProgress * totalHeight + 10,
+      behavior: 'smooth',
+    });
+  };
 
   return (
     <section 
       id="showcase" 
       ref={containerRef}
-      className="relative py-24 px-6 sm:px-8 border-t border-[#252522]/10 transition-colors duration-700 bg-editorial-grain"
-      style={{
-        backgroundColor: currentProject.colorPalette.surface,
-      }}
+      // Generous scroll track height giving ample room for 4 characters × 3 views
+      className="relative h-[480vh] w-full"
     >
-      {/* Subtle background ambient glow linked to character palette */}
+      {/* Pinned Sticky Viewport: Remains locked to the screen while scrolling */}
       <div 
-        className="pointer-events-none absolute top-1/4 left-1/4 w-[600px] h-[600px] blur-[150px] rounded-full transition-colors duration-700 opacity-20"
-        style={{ backgroundColor: currentProject.colorPalette.primary }}
-      />
+        className="sticky top-0 h-screen w-full flex flex-col justify-between overflow-hidden transition-colors duration-700 bg-editorial-grain py-16 px-6 sm:px-8"
+        style={{
+          backgroundColor: currentProject.colorPalette.bgWash,
+        }}
+      >
+        {/* Full-Page Character Atmospheric Glow */}
+        <div 
+          className="pointer-events-none absolute inset-0 transition-colors duration-700 opacity-40 blur-[140px]"
+          style={{
+            background: `radial-gradient(circle at 30% 50%, ${currentProject.colorPalette.primaryLight} 0%, transparent 65%)`
+          }}
+        />
 
-      <div className="max-w-7xl mx-auto">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        {/* Top Floating Showcase Bar */}
+        <div className="max-w-7xl mx-auto w-full z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#252522]/15 bg-[#FAF7F2] text-xs font-mono text-[#252522] mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#C7A052]" />
-              <span>Phase 02 &bull; Cinematic Project Showcase</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#252522]/15 bg-[#FAF7F2]/90 text-xs font-mono text-[#252522]">
+              <Sparkles className="w-3.5 h-3.5" style={{ color: currentProject.colorPalette.accent }} />
+              <span>Scroll-Driven Cinematic Showcase</span>
+              <span className="text-[#252522]/40">&bull;</span>
+              <span className="text-[11px] font-bold" style={{ color: currentProject.colorPalette.primary }}>
+                SCROLL TO ROTATE
+              </span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#252522]">
-              Superhelden &bull; <span className="italic font-normal text-[#C7A052]">The Archetypes</span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#252522] mt-1 tracking-tight">
+              0{activeProjectIndex + 1} &bull; {currentProject.characterName} <span className="italic font-normal text-[#C7A052]">Theme</span>
             </h2>
-            <p className="text-sm font-sans text-[#252522]/70 max-w-lg mt-2">
-              Four conceptual systems framed within bespoke character color palettes, moving through left-profile, front, and right-profile architectural stages.
-            </p>
           </div>
 
-          {/* Project Theme Selector Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          {/* Character Quick Jump Navigation (Accessibility Enhancement) */}
+          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1">
             {projectsData.map((p, idx) => {
               const isActive = idx === activeProjectIndex;
               return (
                 <button
                   key={p.id}
-                  onClick={() => {
-                    setActiveProjectIndex(idx);
-                    setActiveFrameIndex(0); // Always start on Left view of new character
-                  }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all flex items-center gap-2 border ${
+                  onClick={() => jumpToProject(idx, 0)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all flex items-center gap-1.5 border ${
                     isActive 
                       ? 'border-[#252522] bg-[#252522] text-[#F5F0E7] shadow-sm'
-                      : 'border-[#252522]/15 bg-[#FAF7F2] text-[#252522]/70 hover:border-[#C7A052]'
+                      : 'border-[#252522]/15 bg-[#FAF7F2]/80 text-[#252522]/70 hover:border-[#C7A052]'
                   }`}
+                  title={`Jump to ${p.characterName}`}
                 >
                   <span 
                     className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: p.colorPalette.primary }}
                   />
-                  <span>0{idx + 1} {p.themeKey.toUpperCase()}</span>
+                  <span>0{idx + 1} {p.characterName.toUpperCase()}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Desktop Split-Screen & Mobile Stack Composition */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* Main Pinned Split-Screen: LEFT Character, RIGHT Project Content */}
+        <div className="max-w-7xl mx-auto w-full z-20 my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* LEFT: Persistent Character Visual (Span 5 on Desktop, Sticky) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-28 z-20 flex flex-col items-center">
+          {/* LEFT: Substantial Waist-Up Character Presence (Span 5 on Desktop) */}
+          <div className="lg:col-span-5 flex justify-center items-center">
             <CharacterVisual 
               project={currentProject} 
               activeFrameIndex={activeFrameIndex}
               className="w-full"
             />
-
-            {/* Frame Transition Controls */}
-            <div className="w-full max-w-[380px] mt-4 flex items-center justify-between p-2 rounded-xl bg-[#FAF7F2] border border-[#252522]/10 shadow-sm">
-              <button
-                onClick={handlePrevFrame}
-                disabled={activeProjectIndex === 0 && activeFrameIndex === 0}
-                aria-label="Previous Perspective View"
-                className="p-2 rounded-lg text-[#252522] hover:bg-[#F5F0E7] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              {/* 3 Perspective Selector Buttons */}
-              <div className="flex items-center gap-1.5 text-xs font-mono">
-                {currentProject.frames.map((frame, fIdx) => (
-                  <button
-                    key={frame.perspective}
-                    onClick={() => setActiveFrameIndex(fIdx)}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition-all ${
-                      activeFrameIndex === fIdx 
-                        ? 'bg-[#252522] text-[#F5F0E7] font-semibold' 
-                        : 'text-[#252522]/60 hover:text-[#252522] hover:bg-[#F5F0E7]'
-                    }`}
-                  >
-                    {frame.perspective.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={handleNextFrame}
-                aria-label="Next Perspective View"
-                className="p-2 rounded-lg text-[#252522] hover:bg-[#F5F0E7] transition-all"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            <p className="text-[11px] font-mono text-[#252522]/50 mt-2 text-center">
-              Use arrows or click perspective pills to cycle views
-            </p>
           </div>
 
-          {/* RIGHT: Synchronized Project Information (Span 7 on Desktop) */}
-          <div className="lg:col-span-7 flex flex-col">
+          {/* RIGHT: Synchronized Project Details (Span 7 on Desktop) */}
+          <div className="lg:col-span-7 flex flex-col justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${currentProject.id}-${activeFrameIndex}`}
@@ -188,81 +163,87 @@ export default function ProjectShowcase() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="p-8 sm:p-10 rounded-2xl bg-[#FAF7F2] border border-[#252522]/12 shadow-editorial flex flex-col gap-6"
+                className="p-6 sm:p-10 rounded-3xl border shadow-editorial flex flex-col gap-5 backdrop-blur-sm transition-colors duration-500"
+                style={{
+                  backgroundColor: currentProject.colorPalette.surface,
+                  borderColor: currentProject.colorPalette.border,
+                }}
               >
-                {/* Project Header Info */}
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <span 
-                      className="px-2.5 py-1 rounded text-xs font-mono font-medium border"
-                      style={{
-                        borderColor: currentProject.colorPalette.border,
-                        color: currentProject.colorPalette.primary,
-                        backgroundColor: currentProject.colorPalette.badgeBg,
-                      }}
-                    >
-                      {currentProject.inspiration}
-                    </span>
-                    <span className="text-xs font-mono text-[#252522]/60">
-                      Project 0{activeProjectIndex + 1} of 04
-                    </span>
-                  </div>
+                {/* Theme & Perspective Badges */}
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span 
+                    className="px-3 py-1 rounded-full text-xs font-mono font-medium border"
+                    style={{
+                      borderColor: currentProject.colorPalette.border,
+                      color: currentProject.colorPalette.primary,
+                      backgroundColor: currentProject.colorPalette.badgeBg,
+                    }}
+                  >
+                    {currentProject.inspiration}
+                  </span>
 
+                  <span className="text-xs font-mono text-[#252522]/60">
+                    Project 0{activeProjectIndex + 1} of 04
+                  </span>
+                </div>
+
+                {/* Title & Subtitle */}
+                <div>
                   <h3 className="text-2xl sm:text-4xl font-serif font-bold text-[#252522] tracking-tight leading-tight">
                     {currentProject.title}
                   </h3>
                   <p className="text-sm font-sans font-medium text-[#C7A052] mt-1">
-                    {currentProject.tagline}
+                    {currentProject.subtitle}
                   </p>
                 </div>
 
-                {/* Perspective Frame Banner */}
+                {/* Synchronized Perspective Frame Banner */}
                 <div 
-                  className="p-5 rounded-xl border transition-all"
+                  className="p-4 sm:p-5 rounded-2xl border transition-all"
                   style={{
-                    backgroundColor: currentProject.colorPalette.surface,
+                    backgroundColor: 'rgba(255, 255, 255, 0.6)',
                     borderColor: currentProject.colorPalette.border,
                   }}
                 >
-                  <div className="flex items-center justify-between text-xs font-mono mb-2">
+                  <div className="flex items-center justify-between text-xs font-mono mb-1.5">
                     <span className="font-bold text-[#252522] uppercase tracking-wider">
-                      {currentProject.frames[activeFrameIndex].perspectiveTitle}
+                      {currentFrame.perspectiveTitle}
                     </span>
                     <span 
-                      className="px-2 py-0.5 rounded text-[11px] font-semibold"
+                      className="px-2.5 py-0.5 rounded text-[11px] font-semibold"
                       style={{
                         backgroundColor: currentProject.colorPalette.badgeBg,
                         color: currentProject.colorPalette.primary,
                       }}
                     >
-                      {currentProject.frames[activeFrameIndex].metric}
+                      {currentFrame.metric}
                     </span>
                   </div>
                   <p className="text-xs font-sans text-[#252522]/80 leading-relaxed">
-                    {currentProject.frames[activeFrameIndex].details}
+                    {currentFrame.details}
                   </p>
                 </div>
 
                 {/* Summary & Narrative */}
-                <div className="space-y-3 text-sm font-sans text-[#252522]/80 leading-relaxed border-t border-[#252522]/10 pt-5">
+                <div className="text-xs sm:text-sm font-sans text-[#252522]/80 leading-relaxed space-y-2 border-t border-[#252522]/10 pt-4">
                   <p className="font-medium text-[#252522]">
                     {currentProject.summary}
                   </p>
-                  <p className="text-xs sm:text-sm text-[#252522]/70 leading-relaxed">
+                  <p className="text-xs text-[#252522]/70 leading-relaxed hidden sm:block">
                     {currentProject.longDescription}
                   </p>
                 </div>
 
                 {/* Technology Badges */}
-                <div className="border-t border-[#252522]/10 pt-5">
-                  <span className="block text-xs font-mono uppercase tracking-wider text-[#252522]/60 mb-2.5">
+                <div className="border-t border-[#252522]/10 pt-4">
+                  <span className="block text-[11px] font-mono uppercase tracking-wider text-[#252522]/60 mb-2">
                     Architectural Stack
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {currentProject.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="px-3 py-1 rounded-md text-xs font-mono bg-[#F5F0E7] border border-[#252522]/10 text-[#252522] hover:border-[#C7A052] transition-colors"
+                        className="px-2.5 py-1 rounded-md text-xs font-mono bg-[#FAF7F2] border border-[#252522]/10 text-[#252522]"
                       >
                         {tech}
                       </span>
@@ -270,8 +251,8 @@ export default function ProjectShowcase() {
                   </div>
                 </div>
 
-                {/* Project Links (Explicitly Marked Uninvented / Staging placeholders) */}
-                <div className="border-t border-[#252522]/10 pt-5 flex flex-wrap items-center gap-3">
+                {/* Links (Clearly Marked Placeholder / Staging status) */}
+                <div className="border-t border-[#252522]/10 pt-4 flex flex-wrap items-center gap-3">
                   {/* GitHub Link */}
                   {currentProject.links.github.isAvailable ? (
                     <a
@@ -285,8 +266,8 @@ export default function ProjectShowcase() {
                     </a>
                   ) : (
                     <div 
-                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#F5F0E7] border border-[#252522]/15 text-xs font-mono text-[#252522]/60 cursor-not-allowed select-none"
-                      title="Placeholder link: Real GitHub repository will be linked in submission"
+                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#FAF7F2] border border-[#252522]/15 text-xs font-mono text-[#252522]/60 cursor-not-allowed select-none"
+                      title="Placeholder link: Real GitHub repository will be configured for final submission"
                     >
                       <GithubIcon className="w-3.5 h-3.5 opacity-60" />
                       <span>{currentProject.links.github.label}</span>
@@ -306,28 +287,43 @@ export default function ProjectShowcase() {
                     </a>
                   ) : (
                     <div 
-                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#F5F0E7] border border-[#252522]/15 text-xs font-mono text-[#252522]/60 cursor-not-allowed select-none"
-                      title="Placeholder link: Live deployment URL will be configured upon hosting"
+                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#FAF7F2] border border-[#252522]/15 text-xs font-mono text-[#252522]/60 cursor-not-allowed select-none"
+                      title="Placeholder link: Live deployment URL configured in subsequent step"
                     >
                       <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                       <span>{currentProject.links.liveDemo.label}</span>
                     </div>
                   )}
 
-                  {/* Quick Advance Button */}
-                  <button
-                    onClick={handleNextFrame}
-                    className="ml-auto inline-flex items-center gap-1.5 text-xs font-mono text-[#C7A052] hover:text-[#252522] transition-colors"
-                  >
-                    <span>Next View</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  {/* Scroll Progression Indicator */}
+                  <div className="ml-auto text-xs font-mono text-[#252522]/50 flex items-center gap-1.5">
+                    <span>Scroll to advance</span>
+                    <span className="font-bold text-[#252522]">{scrollPercent}%</span>
+                  </div>
                 </div>
 
               </motion.div>
             </AnimatePresence>
           </div>
 
+        </div>
+
+        {/* Bottom Scroll Progress Rail */}
+        <div className="max-w-7xl mx-auto w-full z-20 pt-2 flex items-center justify-between text-xs font-mono text-[#252522]/60">
+          <div className="flex items-center gap-2">
+            <span className="animate-pulse">&bull;</span>
+            <span>Scrolling controls rotation: Left &rarr; Front &rarr; Right &rarr; Next Character</span>
+          </div>
+
+          <div className="w-48 sm:w-64 h-1.5 bg-[#252522]/10 rounded-full overflow-hidden">
+            <div 
+              className="h-full rounded-full transition-all duration-150"
+              style={{
+                width: `${scrollPercent}%`,
+                backgroundColor: currentProject.colorPalette.primary,
+              }}
+            />
+          </div>
         </div>
 
       </div>
