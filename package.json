@@ -4,7 +4,7 @@
   "description": "Full-Stack MERN Developer Portfolio for Madhav",
   "private": true,
   "scripts": {
-    "build": "npm --prefix client run build",
+    "build": "npm --prefix client install && npm --prefix client run build && npm --prefix server install",
     "start": "npm --prefix server run start",
     "build:client": "npm --prefix client run build",
     "client": "npm --prefix client run dev",
