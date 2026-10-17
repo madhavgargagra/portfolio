@@ -5,19 +5,21 @@ import ProjectShowcase from '../components/ProjectShowcase.jsx';
 import AboutSection from '../components/AboutSection.jsx';
 import TimelineSection from '../components/TimelineSection.jsx';
 import CertificationsSection from '../components/CertificationsSection.jsx';
+import ContactSection from '../components/ContactSection.jsx';
 import Footer from '../components/Footer.jsx';
 
 /**
  * HomePage
  * 
- * Polished, professional developer portfolio for Madhav Garg.
+ * Complete, polished MERN developer portfolio for Madhav Garg.
  * Flow:
  * 1. Landing Page (Hero with animated intro & CV download)
  * 2. Professional Project Showcase (MERN & systems engineering grid)
  * 3. Profile & Skills (Categorized proficiencies with animated indicators)
  * 4. Education & Experience Timeline (Chronological academic & project milestones)
  * 5. Certifications & Achievements (Verified licensures & hackathon awards)
- * 6. Refined Footer with Express backend status
+ * 6. Contact Form (Express REST API with Mongoose validation & persistence)
+ * 7. Refined Footer with Express backend status
  */
 export default function HomePage() {
   return (
@@ -29,6 +31,7 @@ export default function HomePage() {
         <AboutSection />
         <TimelineSection />
         <CertificationsSection />
+        <ContactSection />
       </main>
       <Footer />
     </div>

@@ -23,6 +23,7 @@ export default function Navbar() {
     { label: 'About & Skills', href: '#about' },
     { label: 'Timeline', href: '#timeline' },
     { label: 'Credentials', href: '#credentials' },
+    { label: 'Contact', href: '#contact' },
   ];
 
   return (

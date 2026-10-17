@@ -186,10 +186,10 @@ export default function AboutSection() {
             <div className="p-6 rounded-3xl border border-[#C7A052]/30 bg-[#FAF7F2]/60 dark:bg-[#191C22]/60">
               <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#C7A052] mb-2">
                 <Award className="w-4 h-4" />
-                <span>Verified Credentials & Roadmap</span>
+                <span>Full Portfolio Feature Architecture</span>
               </div>
               <p className="text-xs font-sans text-[#252522]/75 dark:text-[#E6E4DE]/75 leading-relaxed mb-3">
-                Education, Experience, and Certifications sections are active below. The MongoDB contact form will be connected in the next step.
+                Timeline, Certifications, and the Express + MongoDB Contact Form are active and fully operational below.
               </p>
               <div className="flex flex-wrap items-center gap-3 text-xs font-mono font-semibold text-[#C7A052]">
                 <a href="#timeline" className="hover:text-[#252522] dark:hover:text-white transition-colors flex items-center gap-1">
@@ -197,6 +197,9 @@ export default function AboutSection() {
                 </a>
                 <a href="#credentials" className="hover:text-[#252522] dark:hover:text-white transition-colors flex items-center gap-1">
                   <span>Certifications</span> &rarr;
+                </a>
+                <a href="#contact" className="hover:text-[#252522] dark:hover:text-white transition-colors flex items-center gap-1">
+                  <span>Contact</span> &rarr;
                 </a>
               </div>
             </div>

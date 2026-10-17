@@ -1,4 +1,5 @@
 import { config } from '../config/env.js';
+import { isDbConnected } from '../config/db.js';
 
 /**
  * Health check controller
@@ -13,5 +14,9 @@ export const getHealthStatus = (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: Math.floor(process.uptime()),
     environment: config.nodeEnv,
+    database: {
+      status: isDbConnected() ? 'connected' : 'disconnected',
+      configured: Boolean(config.mongoUri),
+    },
   });
 };
