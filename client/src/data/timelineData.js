@@ -1,9 +1,8 @@
 /**
  * Centralized Timeline Configuration
- * 
- * Data-driven timeline entries for Education and Experience.
- * Editable fields for institutions, roles, dates, descriptions, and highlights.
- * Clearly marked placeholders where personal information is customizable.
+ *
+ * Genuine academic milestones and verified university project leadership.
+ * Omit unverified or fabricated internship experience until official details are provided.
  */
 
 export const educationTimeline = [
@@ -14,12 +13,12 @@ export const educationTimeline = [
     isCurrent: true,
     institution: 'JK Lakshmipat University (JKLU)',
     degree: 'B.Tech in Computer Science & Engineering',
-    subheading: 'Active Semester: 5 &bull; Full-Stack & Systems Focus',
+    subheading: 'Active Semester: 5 • Full-Stack MERN & Systems Focus',
     location: 'Jaipur, Rajasthan, India',
-    description: 'Undergraduate engineering program blending theoretical computer science with modern full-stack application development. Maintaining rigorous academic coursework across core systems, algorithmic analysis, and software engineering.',
+    description: 'Undergraduate engineering curriculum blending theoretical computing foundations with practical full-stack web engineering, database architecture, and operating systems.',
     highlights: [
-      'Focusing on Full-Stack MERN architecture, RESTful API design, and asynchronous server workflows',
-      'Consistent practical laboratory evaluations across Database Systems and Operating Systems',
+      'Focusing on Full-Stack MERN architecture, RESTful API contracts, and asynchronous server workflows',
+      'Consistent laboratory practical evaluations across Database Systems and Operating Systems',
       'Actively collaborating on peer code reviews and modular engineering assignments',
     ],
     coursework: [
@@ -33,17 +32,17 @@ export const educationTimeline = [
   },
   {
     id: 'edu-school',
-    period: 'Completed [e.g. 2021 — 2023]',
+    period: 'Pre-University',
     badge: 'Senior Secondary',
     isCurrent: false,
-    institution: '[Institution Name: Senior Secondary School / College Placeholder]',
-    degree: 'Higher Secondary Certificate (Class XII / Science Stream)',
+    institution: 'Senior Secondary Certificate (Class XII)',
+    degree: 'Higher Secondary Certificate (Science Stream)',
     subheading: 'Physics, Chemistry & Mathematics (PCM)',
     location: 'Rajasthan, India',
-    description: 'Developed foundational competencies in advanced mathematics, analytical reasoning, and introductory programming before entering university engineering studies.',
+    description: 'Pre-university foundational studies developing analytical reasoning, quantitative computation, and introductory computer science fundamentals.',
     highlights: [
-      'Completed comprehensive coursework in calculus, coordinate geometry, and physical sciences',
-      'Demonstrated high aptitude in quantitative reasoning and scientific method',
+      'Completed rigorous coursework in advanced mathematics, physical sciences, and analytical method',
+      'Demonstrated high aptitude in quantitative reasoning and scientific problem solving',
     ],
     coursework: [
       'Advanced Mathematics',
@@ -63,29 +62,13 @@ export const experienceTimeline = [
     role: 'Full-Stack Developer & Peer Collaborator',
     organization: 'University Project Initiatives & Open Source',
     location: 'JKLU, Jaipur',
-    description: 'Architecting scalable web prototypes and full-stack MERN services. Serving as a peer mentor for junior students in web development fundamentals, Git workflows, and component architectures.',
+    description: 'Architecting web prototypes and full-stack MERN services. Assisting peer students in web development fundamentals, Git version control, and modular component architectures.',
     highlights: [
       'Built decoupled Express REST APIs with centralized error handling and Mongoose schema validation',
       'Engineered accessible, mobile-first React 19 interfaces using Tailwind CSS and Framer Motion',
       'Facilitated peer review sessions covering semantic commit standards and clean project structures',
     ],
     technologies: ['React 19', 'Express.js', 'Node.js', 'MongoDB', 'Tailwind CSS', 'Git'],
-  },
-  {
-    id: 'exp-internship-placeholder',
-    period: '[Date Range: e.g. Summer 2025 Placeholder]',
-    badge: 'Internship / Professional',
-    isCurrent: false,
-    role: '[Role Title: Software Engineering Intern / Web Developer Placeholder]',
-    organization: '[Company / Organization Name Placeholder]',
-    location: '[Location: e.g. Jaipur / Remote Placeholder]',
-    description: '[Editable Description: Summarize your professional internship responsibilities, production contributions, and collaboration with the engineering team. Replace with your actual experience.]',
-    highlights: [
-      '[Key Contribution: e.g. Developed and tested responsive user interfaces using React and modern CSS]',
-      '[API Collaboration: e.g. Integrated backend REST endpoints and optimized client network requests]',
-      '[Code Quality: e.g. Authored unit tests and participated in daily stand-up engineering sprints]',
-    ],
-    technologies: ['React', 'REST APIs', 'Node.js', 'Git', 'Agile / Scrum'],
   },
   {
     id: 'exp-leadership-hackathon',

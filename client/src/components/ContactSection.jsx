@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Send, 
-  User, 
-  Mail, 
-  MessageSquare, 
-  CheckCircle2, 
-  AlertCircle, 
-  AlertTriangle, 
-  Loader2, 
-  Sparkles, 
-  MapPin, 
-  Clock, 
-  Copy, 
-  Check, 
-  ShieldCheck, 
+import {
+  Send,
+  User,
+  Mail,
+  MessageSquare,
+  CheckCircle2,
+  AlertCircle,
+  AlertTriangle,
+  Loader2,
+  Sparkles,
+  MapPin,
+  Clock,
+  Copy,
+  Check,
+  ShieldCheck,
   Database,
-  ArrowRight,
   RefreshCw
 } from 'lucide-react';
 import { sendContactMessage } from '../services/contactService.js';
@@ -26,18 +25,15 @@ import { API_ENDPOINTS } from '../config/api.js';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function ContactSection() {
-  // Form input state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: '',
   });
 
-  // Validation errors
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
-  // Submission lifecycle states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // null | 'success' | 'error'
   const [statusFeedback, setStatusFeedback] = useState({
@@ -47,10 +43,8 @@ export default function ContactSection() {
     recordData: null,
   });
 
-  // Copy email status
   const [copiedEmail, setCopiedEmail] = useState(false);
 
-  // Backend & Database status from health endpoint
   const [backendStatus, setBackendStatus] = useState({
     online: false,
     dbStatus: 'checking',
@@ -81,7 +75,6 @@ export default function ContactSection() {
     return () => { isMounted = false; };
   }, []);
 
-  // Realtime validator for individual fields
   const validateField = (name, value) => {
     let error = '';
     if (name === 'name') {
@@ -116,7 +109,6 @@ export default function ContactSection() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // If field was previously touched, revalidate dynamically
     if (touched[name]) {
       const err = validateField(name, value);
       setErrors((prev) => ({ ...prev, [name]: err }));
@@ -148,13 +140,9 @@ export default function ContactSection() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Prevent duplicate submission if already in flight
     if (isSubmitting) return;
-
-    // Reset previous banner status
     setSubmitStatus(null);
 
-    // Validate all fields on client first
     if (!validateAll()) {
       return;
     }
@@ -169,7 +157,6 @@ export default function ContactSection() {
       });
 
       if (result.success) {
-        // Successful MongoDB persistence confirmed by server
         setSubmitStatus('success');
         setStatusFeedback({
           title: 'Message Persisted Successfully',
@@ -178,22 +165,19 @@ export default function ContactSection() {
           code: 'PERSISTED',
         });
 
-        // Form fields cleared ONLY after server confirms success
         setFormData({ name: '', email: '', message: '' });
         setErrors({});
         setTouched({});
       } else {
-        // Failure or server rejection
         setSubmitStatus('error');
 
-        // Populate inline errors if server sent field validation errors
         if (result.errors) {
           setErrors((prev) => ({ ...prev, ...result.errors }));
         }
 
         setStatusFeedback({
-          title: result.code === 'DB_UNAVAILABLE' 
-            ? 'MongoDB Service Temporarily Offline' 
+          title: result.code === 'DB_UNAVAILABLE'
+            ? 'MongoDB Service Standby'
             : result.code === 'NETWORK_ERROR'
             ? 'Backend Connection Offline'
             : 'Submission Rejected by Server',
@@ -201,11 +185,11 @@ export default function ContactSection() {
           code: result.code,
         });
       }
-    } catch (err) {
+    } catch {
       setSubmitStatus('error');
       setStatusFeedback({
-        title: 'Unexpected Network Error',
-        message: 'Could not communicate with the API server. Please verify Express is running.',
+        title: 'Network Communication Error',
+        message: 'Could not connect to the API server. Please verify Express is running.',
         code: 'CLIENT_EXCEPTION',
       });
     } finally {
@@ -214,7 +198,7 @@ export default function ContactSection() {
   };
 
   const handleCopyEmail = () => {
-    const emailToCopy = 'madhav.garg@example.com';
+    const emailToCopy = 'madhav.garg@jklu.edu.in';
     if (navigator?.clipboard?.writeText) {
       navigator.clipboard.writeText(emailToCopy);
     }
@@ -230,37 +214,37 @@ export default function ContactSection() {
   };
 
   return (
-    <section 
+    <section
       id="contact"
-      className="relative py-28 px-6 sm:px-8 border-t border-[#252522]/10 dark:border-white/10 bg-[#F5F0E7] dark:bg-[#111317] bg-editorial-grain transition-colors duration-500 overflow-hidden"
+      className="relative py-20 sm:py-28 px-4 sm:px-8 border-t border-[#252522]/10 dark:border-white/10 bg-[#F5F0E7] dark:bg-[#111317] bg-editorial-grain transition-colors duration-500 overflow-hidden"
     >
       {/* Decorative Atmospheric Glows */}
-      <div className="pointer-events-none absolute top-1/3 left-10 w-[500px] h-[450px] bg-[#C7A052]/10 dark:bg-[#C7A052]/5 blur-[130px] rounded-full" />
-      <div className="pointer-events-none absolute bottom-10 right-10 w-[550px] h-[400px] bg-[#D9CBB7]/30 dark:bg-slate-800/10 blur-[140px] rounded-full" />
+      <div className="pointer-events-none absolute top-1/3 left-10 w-[300px] sm:w-[500px] h-[300px] sm:h-[450px] bg-[#C7A052]/10 dark:bg-[#C7A052]/5 blur-[100px] sm:blur-[130px] rounded-full" />
+      <div className="pointer-events-none absolute bottom-10 right-10 w-[300px] sm:w-[550px] h-[300px] sm:h-[400px] bg-[#D9CBB7]/30 dark:bg-slate-800/10 blur-[100px] sm:blur-[140px] rounded-full" />
 
       <div className="max-w-7xl mx-auto relative z-10">
 
         {/* Section Header */}
-        <div className="max-w-3xl mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C7A052]/40 bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] mb-4 shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#C7A052]" />
+        <div className="max-w-3xl mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border border-[#C7A052]/40 bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] mb-3 sm:mb-4 shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#C7A052] shrink-0" />
             <span className="font-semibold uppercase tracking-wider">Inquiries &amp; Collaboration</span>
             <span className="text-[#252522]/30 dark:text-white/30">&bull;</span>
             <span>Requirement 08</span>
           </div>
 
-          <h2 className="text-4xl sm:text-6xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] tracking-tight">
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] tracking-tight">
             Initiate a <span className="italic font-normal text-[#C7A052]">Dialogue</span>.
           </h2>
 
-          <p className="text-base sm:text-lg font-sans text-[#252522]/75 dark:text-[#E6E4DE]/75 mt-3 leading-relaxed">
+          <p className="text-sm sm:text-base lg:text-lg font-sans text-[#252522]/75 dark:text-[#E6E4DE]/75 mt-2.5 sm:mt-3 leading-relaxed">
             Have an engineering opportunity, architectural question, or research collaboration in mind? Leave a message below — submissions are validated and persisted to MongoDB via Express REST.
           </p>
         </div>
 
         {/* Main Grid: Left Column Details & Right Column Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+
           {/* Left Column: Editorial Contact Details (Span 5) */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -270,16 +254,16 @@ export default function ContactSection() {
             className="lg:col-span-5 flex flex-col gap-6"
           >
             {/* Primary Details Card */}
-            <div className="p-8 rounded-3xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/12 dark:border-white/10 shadow-editorial">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#C7A052] font-semibold block mb-4">
+            <div className="p-6 sm:p-8 rounded-3xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/12 dark:border-white/10 shadow-editorial">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#C7A052] font-semibold block mb-3 sm:mb-4">
                 Direct Contact Channel
               </span>
 
-              <h3 className="text-2xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] mb-3">
+              <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] mb-2 sm:mb-3">
                 Madhav Garg
               </h3>
-              
-              <p className="text-sm font-sans text-[#252522]/70 dark:text-[#E6E4DE]/70 leading-relaxed mb-6">
+
+              <p className="text-xs sm:text-sm font-sans text-[#252522]/70 dark:text-[#E6E4DE]/70 leading-relaxed mb-5 sm:mb-6">
                 Computer Science &amp; Engineering undergraduate at JK Lakshmipat University. Actively building full-stack distributed systems and high-fidelity web experiences.
               </p>
 
@@ -295,16 +279,16 @@ export default function ContactSection() {
                   </div>
                 </div>
 
-                {/* Email Placeholder with Copy */}
+                {/* Email Placeholder with Copy (Min-44px touch target) */}
                 <div className="flex items-center justify-between p-3 rounded-2xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border border-[#252522]/8 dark:border-white/5">
                   <div className="flex items-center gap-3 truncate mr-2">
                     <div className="p-1.5 rounded-lg bg-[#FAF7F2] dark:bg-[#191C22] text-[#C7A052] shrink-0">
                       <Mail className="w-3.5 h-3.5" />
                     </div>
                     <div className="truncate">
-                      <span className="text-[#252522]/50 dark:text-white/40 block text-[10px] uppercase font-semibold">Email Placeholder</span>
-                      <span className="text-[#252522] dark:text-[#FAF7F2] font-semibold truncate block">
-                        madhav.garg@example.com
+                      <span className="text-[#252522]/50 dark:text-white/40 block text-[10px] uppercase font-semibold">Institutional Contact</span>
+                      <span className="text-[#252522] dark:text-[#FAF7F2] font-semibold truncate block text-xs">
+                        madhav.garg@jklu.edu.in
                       </span>
                     </div>
                   </div>
@@ -312,7 +296,7 @@ export default function ContactSection() {
                   <button
                     type="button"
                     onClick={handleCopyEmail}
-                    className="p-1.5 rounded-lg text-[#252522]/60 dark:text-white/60 hover:text-[#C7A052] hover:bg-[#FAF7F2] dark:hover:bg-[#191C22] transition-colors shrink-0"
+                    className="w-11 h-11 rounded-lg text-[#252522]/60 dark:text-white/60 hover:text-[#C7A052] hover:bg-[#FAF7F2] dark:hover:bg-[#191C22] transition-colors shrink-0 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
                     title="Copy Email Address"
                     aria-label="Copy Email Address"
                   >
@@ -338,19 +322,19 @@ export default function ContactSection() {
             </div>
 
             {/* System Engine Health Card */}
-            <div className="p-6 rounded-3xl bg-[#FAF7F2]/80 dark:bg-[#191C22]/80 border border-[#252522]/10 dark:border-white/10 text-xs font-mono">
+            <div className="p-5 sm:p-6 rounded-3xl bg-[#FAF7F2]/80 dark:bg-[#191C22]/80 border border-[#252522]/10 dark:border-white/10 text-xs font-mono">
               <div className="flex items-center justify-between mb-3">
                 <span className="font-semibold text-[#252522] dark:text-[#FAF7F2] flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[#C7A052]" />
                   <span>Backend Engine Status</span>
                 </span>
                 <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] ${
-                  backendStatus.online 
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' 
+                  backendStatus.online
+                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
                     : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'
                 }`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${backendStatus.online ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                  {backendStatus.online ? 'Online' : 'Offline'}
+                  {backendStatus.online ? 'Online' : 'Standby'}
                 </span>
               </div>
 
@@ -360,13 +344,13 @@ export default function ContactSection() {
                   <span className="font-semibold text-[#252522] dark:text-[#FAF7F2]">POST /api/contact</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>MongoDB Connection:</span>
+                  <span>MongoDB Atlas:</span>
                   <span className={`font-semibold ${
-                    backendStatus.dbStatus === 'connected' 
-                      ? 'text-emerald-600 dark:text-emerald-400' 
+                    backendStatus.dbStatus === 'connected'
+                      ? 'text-emerald-600 dark:text-emerald-400'
                       : 'text-amber-600 dark:text-amber-400'
                   }`}>
-                    {backendStatus.dbStatus === 'connected' ? 'Connected & Ready' : 'Standby / Localhost'}
+                    {backendStatus.dbStatus === 'connected' ? 'Connected & Ready' : 'Standby / Connecting'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -385,19 +369,19 @@ export default function ContactSection() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-7"
           >
-            <div className="p-8 sm:p-10 rounded-3xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/12 dark:border-white/10 shadow-editorial">
-              
+            <div className="p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/12 dark:border-white/10 shadow-editorial">
+
               {/* Top Form Header */}
-              <div className="mb-8 pb-5 border-b border-[#252522]/10 dark:border-white/10 flex items-center justify-between">
+              <div className="mb-6 sm:mb-8 pb-4 sm:pb-5 border-b border-[#252522]/10 dark:border-white/10 flex items-center justify-between">
                 <div>
-                  <h3 className="text-2xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2]">
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2]">
                     Send a Direct Message
                   </h3>
                   <span className="text-xs font-mono text-[#252522]/60 dark:text-[#E6E4DE]/60">
                     Fields marked with an asterisk (<span className="text-[#C7A052]">*</span>) are mandatory
                   </span>
                 </div>
-                <div className="p-2.5 rounded-2xl bg-[#F5F0E7] dark:bg-[#121316] text-[#C7A052] border border-[#252522]/10 dark:border-white/10">
+                <div className="p-2 sm:p-2.5 rounded-2xl bg-[#F5F0E7] dark:bg-[#121316] text-[#C7A052] border border-[#252522]/10 dark:border-white/10 shrink-0">
                   <MessageSquare className="w-5 h-5" />
                 </div>
               </div>
@@ -410,7 +394,7 @@ export default function ContactSection() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-8 p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 dark:text-emerald-200"
+                    className="mb-6 sm:mb-8 p-4 sm:p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 dark:text-emerald-200"
                     role="alert"
                     aria-live="polite"
                   >
@@ -432,9 +416,9 @@ export default function ContactSection() {
                         <button
                           type="button"
                           onClick={handleResetForm}
-                          className="mt-4 inline-flex items-center gap-1.5 text-xs font-mono text-emerald-700 dark:text-emerald-300 font-semibold underline hover:no-underline"
+                          className="mt-4 inline-flex items-center gap-1.5 min-h-[44px] text-xs font-mono text-emerald-700 dark:text-emerald-300 font-semibold underline hover:no-underline"
                         >
-                          <RefreshCw className="w-3 h-3" />
+                          <RefreshCw className="w-3.5 h-3.5" />
                           <span>Send another message</span>
                         </button>
                       </div>
@@ -448,7 +432,7 @@ export default function ContactSection() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-8 p-5 rounded-2xl bg-amber-500/10 dark:bg-amber-950/20 border border-amber-500/30 text-amber-950 dark:text-amber-200"
+                    className="mb-6 sm:mb-8 p-4 sm:p-5 rounded-2xl bg-amber-500/10 dark:bg-amber-950/20 border border-amber-500/30 text-amber-950 dark:text-amber-200"
                     role="alert"
                     aria-live="polite"
                   >
@@ -475,13 +459,13 @@ export default function ContactSection() {
               </AnimatePresence>
 
               {/* Form Element */}
-              <form onSubmit={handleSubmit} noValidate className="space-y-6">
-                
+              <form onSubmit={handleSubmit} noValidate className="space-y-5 sm:space-y-6">
+
                 {/* 1. Name Input */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label 
-                      htmlFor="contact-name" 
+                    <label
+                      htmlFor="contact-name"
                       className="block text-xs font-mono font-medium text-[#252522] dark:text-[#FAF7F2]"
                     >
                       Your Name <span className="text-[#C7A052]">*</span>
@@ -508,9 +492,9 @@ export default function ContactSection() {
                       aria-required="true"
                       aria-invalid={Boolean(errors.name)}
                       aria-describedby={errors.name ? 'contact-name-error' : undefined}
-                      className={`w-full pl-10 pr-4 py-3 rounded-2xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border transition-all text-sm font-sans text-[#252522] dark:text-[#FAF7F2] placeholder-[#252522]/40 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#C7A052] disabled:opacity-60 disabled:cursor-not-allowed ${
-                        errors.name 
-                          ? 'border-rose-500 dark:border-rose-400 focus:ring-rose-500' 
+                      className={`w-full min-h-[44px] pl-10 pr-4 py-3 rounded-2xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border transition-all text-sm font-sans text-[#252522] dark:text-[#FAF7F2] placeholder-[#252522]/40 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#C7A052] disabled:opacity-60 disabled:cursor-not-allowed ${
+                        errors.name
+                          ? 'border-rose-500 dark:border-rose-400 focus:ring-rose-500'
                           : 'border-[#252522]/15 dark:border-white/10 hover:border-[#C7A052]'
                       }`}
                     />
@@ -533,8 +517,8 @@ export default function ContactSection() {
                 {/* 2. Email Input */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label 
-                      htmlFor="contact-email" 
+                    <label
+                      htmlFor="contact-email"
                       className="block text-xs font-mono font-medium text-[#252522] dark:text-[#FAF7F2]"
                     >
                       Email Address <span className="text-[#C7A052]">*</span>
@@ -561,9 +545,9 @@ export default function ContactSection() {
                       aria-required="true"
                       aria-invalid={Boolean(errors.email)}
                       aria-describedby={errors.email ? 'contact-email-error' : undefined}
-                      className={`w-full pl-10 pr-4 py-3 rounded-2xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border transition-all text-sm font-sans text-[#252522] dark:text-[#FAF7F2] placeholder-[#252522]/40 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#C7A052] disabled:opacity-60 disabled:cursor-not-allowed ${
-                        errors.email 
-                          ? 'border-rose-500 dark:border-rose-400 focus:ring-rose-500' 
+                      className={`w-full min-h-[44px] pl-10 pr-4 py-3 rounded-2xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border transition-all text-sm font-sans text-[#252522] dark:text-[#FAF7F2] placeholder-[#252522]/40 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#C7A052] disabled:opacity-60 disabled:cursor-not-allowed ${
+                        errors.email
+                          ? 'border-rose-500 dark:border-rose-400 focus:ring-rose-500'
                           : 'border-[#252522]/15 dark:border-white/10 hover:border-[#C7A052]'
                       }`}
                     />
@@ -586,8 +570,8 @@ export default function ContactSection() {
                 {/* 3. Message Textarea */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label 
-                      htmlFor="contact-message" 
+                    <label
+                      htmlFor="contact-message"
                       className="block text-xs font-mono font-medium text-[#252522] dark:text-[#FAF7F2]"
                     >
                       Message Content <span className="text-[#C7A052]">*</span>
@@ -610,9 +594,9 @@ export default function ContactSection() {
                       aria-required="true"
                       aria-invalid={Boolean(errors.message)}
                       aria-describedby={errors.message ? 'contact-message-error' : undefined}
-                      className={`w-full p-4 rounded-2xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border transition-all text-sm font-sans text-[#252522] dark:text-[#FAF7F2] placeholder-[#252522]/40 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#C7A052] disabled:opacity-60 disabled:cursor-not-allowed resize-y ${
-                        errors.message 
-                          ? 'border-rose-500 dark:border-rose-400 focus:ring-rose-500' 
+                      className={`w-full min-h-[120px] p-4 rounded-2xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border transition-all text-sm font-sans text-[#252522] dark:text-[#FAF7F2] placeholder-[#252522]/40 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#C7A052] disabled:opacity-60 disabled:cursor-not-allowed resize-y ${
+                        errors.message
+                          ? 'border-rose-500 dark:border-rose-400 focus:ring-rose-500'
                           : 'border-[#252522]/15 dark:border-white/10 hover:border-[#C7A052]'
                       }`}
                     />
@@ -632,12 +616,12 @@ export default function ContactSection() {
                   )}
                 </div>
 
-                {/* Submit Action Button */}
+                {/* Submit Action Button (Min-48px touch target) */}
                 <div className="pt-2">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] font-sans font-medium text-sm hover:bg-[#C7A052] dark:hover:bg-[#C7A052] dark:hover:text-white transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-[#C7A052] disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full inline-flex items-center justify-center gap-2.5 px-8 py-3.5 min-h-[48px] rounded-full bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] font-sans font-medium text-sm hover:bg-[#C7A052] dark:hover:bg-[#C7A052] dark:hover:text-white transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-[#C7A052] disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>
@@ -652,7 +636,7 @@ export default function ContactSection() {
                     )}
                   </button>
 
-                  <div className="flex items-center justify-between text-[11px] font-mono text-[#252522]/50 dark:text-white/40 mt-3 px-1">
+                  <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] sm:text-[11px] font-mono text-[#252522]/50 dark:text-white/40 mt-3 px-1">
                     <span>Rate protected: Max 30 req/15min</span>
                     <span>Sanitized &amp; Persisted with Mongoose</span>
                   </div>

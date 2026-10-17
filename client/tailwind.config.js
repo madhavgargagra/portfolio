@@ -28,7 +28,7 @@ export default {
         },
         sand: {
           DEFAULT: '#D9CBB7',
-          light: '#E6DC CD',
+          light: '#E6DCCD',
           dark: '#C5B49D',
           surface: 'rgba(217, 203, 183, 0.45)',
         },

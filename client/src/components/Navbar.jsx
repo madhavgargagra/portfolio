@@ -11,7 +11,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(window.scrollY > 30);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -27,39 +27,46 @@ export default function Navbar() {
   ];
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-[#F5F0E7]/90 dark:bg-[#111317]/90 backdrop-blur-md border-b border-[#252522]/10 dark:border-white/10 shadow-sm py-3.5' 
-          : 'bg-transparent py-5'
+    <header
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        scrolled
+          ? 'bg-[#F5F0E7]/92 dark:bg-[#111317]/92 backdrop-blur-md border-b border-[#252522]/10 dark:border-white/10 shadow-xs py-2 sm:py-3'
+          : 'bg-transparent py-4 sm:py-5'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between">
-        {/* Top-Left Logo */}
-        <a href="#hero" className="outline-none focus:ring-2 focus:ring-[#C7A052] rounded-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
+        {/* Top-Left Logo with Accessible Target */}
+        <a
+          href="#hero"
+          aria-label="Madhav Garg Portfolio Homepage"
+          className="outline-none focus:ring-2 focus:ring-[#C7A052] rounded-xl shrink-0"
+        >
           <Logo />
         </a>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-sans font-medium text-[#252522]/80 dark:text-[#E6E4DE]/80">
+        <nav
+          aria-label="Primary Navigation"
+          className="hidden md:flex items-center gap-7 lg:gap-8 text-sm font-sans font-medium text-[#252522]/80 dark:text-[#E6E4DE]/80"
+        >
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="relative py-1 transition-colors hover:text-[#C7A052] dark:hover:text-[#C7A052] focus:outline-none focus:text-[#C7A052]"
+              className="relative py-2 transition-colors hover:text-[#C7A052] dark:hover:text-[#C7A052] focus:outline-none focus:text-[#C7A052]"
             >
               {link.label}
             </a>
           ))}
         </nav>
 
-        {/* Right Actions: Theme Toggle & Explore Projects CTA */}
+        {/* Desktop Right Actions: Theme Toggle & Explore Projects CTA */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Dark / Light Mode Toggle Button */}
+          {/* Dark / Light Mode Toggle Button (Accessible min 44x44px target) */}
           <button
             onClick={toggleTheme}
-            aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            className="p-2.5 rounded-full border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522] dark:text-[#E6E4DE] hover:border-[#C7A052] transition-colors focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
+            aria-label={isDark ? 'Switch to Ivory Light Mode' : 'Switch to Dark Mode'}
+            className="w-11 h-11 rounded-full border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522] dark:text-[#E6E4DE] hover:border-[#C7A052] transition-colors focus:outline-none focus:ring-2 focus:ring-[#C7A052] flex items-center justify-center shrink-0"
             title={isDark ? 'Activate Ivory Light Mode' : 'Activate Dark Mode'}
           >
             {isDark ? (
@@ -72,7 +79,7 @@ export default function Navbar() {
           {/* Explore Projects CTA */}
           <a
             href="#showcase"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#C7A052] bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono font-medium text-[#252522] dark:text-[#E6E4DE] hover:bg-[#C7A052] hover:text-white dark:hover:bg-[#C7A052] dark:hover:text-white transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
+            className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-full border border-[#C7A052] bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono font-medium text-[#252522] dark:text-[#E6E4DE] hover:bg-[#C7A052] hover:text-white dark:hover:bg-[#C7A052] dark:hover:text-white transition-all shadow-xs focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
           >
             <Compass className="w-3.5 h-3.5 text-[#C7A052] group-hover:text-white" />
             <span>Explore Projects</span>
@@ -80,22 +87,24 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile Controls (Theme Toggle + Menu Toggle) */}
+        {/* Mobile Controls (Theme Toggle + Menu Toggle, both >= 44x44px) */}
         <div className="md:hidden flex items-center gap-2">
           <button
             onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="p-2 rounded-lg border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522] dark:text-[#E6E4DE]"
+            aria-label={isDark ? 'Switch to Ivory Light Mode' : 'Switch to Dark Mode'}
+            className="w-11 h-11 rounded-xl border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522] dark:text-[#E6E4DE] flex items-center justify-center shrink-0 focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
+            title={isDark ? 'Activate Ivory Light Mode' : 'Activate Dark Mode'}
           >
             {isDark ? <Sun className="w-4 h-4 text-[#C7A052]" /> : <Moon className="w-4 h-4" />}
           </button>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation menu"
-            className="p-2 rounded-lg text-[#252522] dark:text-[#E6E4DE] hover:bg-[#FAF7F2] dark:hover:bg-[#191C22] border border-[#252522]/10 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+            className="w-11 h-11 rounded-xl text-[#252522] dark:text-[#E6E4DE] bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/15 dark:border-white/15 flex items-center justify-center shrink-0 focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="w-5 h-5 text-[#C7A052]" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
@@ -107,28 +116,32 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#FAF7F2] dark:bg-[#191C22] border-b border-[#252522]/10 dark:border-white/10 px-6 py-6 overflow-hidden"
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="md:hidden bg-[#FAF7F2] dark:bg-[#191C22] border-b border-[#252522]/10 dark:border-white/10 px-4 sm:px-6 py-4 overflow-hidden shadow-lg"
           >
-            <div className="flex flex-col gap-4 font-sans text-sm">
+            <nav aria-label="Mobile Navigation" className="flex flex-col gap-1 font-sans text-sm">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="py-2 text-[#252522] dark:text-[#E6E4DE] hover:text-[#C7A052] border-b border-[#252522]/5 dark:border-white/5"
+                  className="min-h-[44px] flex items-center px-3 py-2 text-[#252522] dark:text-[#E6E4DE] hover:text-[#C7A052] dark:hover:text-[#C7A052] rounded-lg transition-colors border-b border-[#252522]/5 dark:border-white/5"
                 >
                   {link.label}
                 </a>
               ))}
-              <a
-                href="#showcase"
-                onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-full border border-[#C7A052] bg-[#F5F0E7] dark:bg-[#121316] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] mt-2"
-              >
-                <span>Explore Projects</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
+              <div className="pt-2">
+                <a
+                  href="#showcase"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-flex items-center justify-center gap-2 w-full min-h-[44px] py-2.5 rounded-full border border-[#C7A052] bg-[#F5F0E7] dark:bg-[#121316] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] hover:bg-[#C7A052] hover:text-white dark:hover:bg-[#C7A052] dark:hover:text-white transition-all shadow-xs"
+                >
+                  <Compass className="w-3.5 h-3.5 text-[#C7A052]" />
+                  <span>Explore Projects</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>

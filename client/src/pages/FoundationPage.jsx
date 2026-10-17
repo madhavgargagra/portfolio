@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Terminal, 
-  Layers, 
-  Cpu, 
-  ShieldCheck, 
-  Sparkles, 
-  ExternalLink, 
-  Server, 
-  CheckCircle2, 
+import {
+  Terminal,
+  Layers,
+  Cpu,
+  ShieldCheck,
+  Sparkles,
+  ExternalLink,
+  Server,
+  CheckCircle2,
   ArrowUpRight,
   Code2
 } from 'lucide-react';
@@ -45,22 +45,24 @@ export default function FoundationPage() {
 
       {/* Navigation Header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-canvas/80 border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent-blue rounded-lg">
             <div className="h-9 w-9 rounded-lg bg-gradient-to-tr from-accent-blue to-accent-violet flex items-center justify-center text-canvas font-black font-mono shadow-glow-blue/50">
               M
             </div>
             <div>
-              <span className="font-bold text-slate-100 text-sm tracking-tight block">madhav.dev</span>
+              <span className="font-bold text-slate-100 text-sm tracking-tight block group-hover:text-accent-blue transition-colors">madhav.dev</span>
               <span className="text-[10px] text-slate-400 font-mono tracking-wider block uppercase">Portfolio Foundation</span>
             </div>
-          </div>
+          </a>
 
-          <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Step 1: Foundation Active
-            </span>
+          <div className="flex items-center gap-3">
+            <a
+              href="/"
+              className="min-h-[44px] inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 transition-colors"
+            >
+              &larr; <span>Back to Home</span>
+            </a>
           </div>
         </div>
       </header>
@@ -68,7 +70,7 @@ export default function FoundationPage() {
       {/* Main Content: Bento Grid Demonstration */}
       <main className="max-w-6xl mx-auto px-6 py-12 flex-1 w-full">
         {/* Intro Banner */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -88,9 +90,9 @@ export default function FoundationPage() {
 
         {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          
+
           {/* Card 1: Identity & Core Role (Span 2 cols) */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -116,7 +118,7 @@ export default function FoundationPage() {
           </motion.div>
 
           {/* Card 2: Backend Architecture & Health Status */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
@@ -154,7 +156,7 @@ export default function FoundationPage() {
           </motion.div>
 
           {/* Card 3: Tech Stack Tokens */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -166,7 +168,7 @@ export default function FoundationPage() {
                 <Cpu className="w-5 h-5 text-slate-500" />
               </div>
               <h3 className="text-lg font-bold text-white mb-3">Modern Web Tooling</h3>
-              
+
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <div className="p-2.5 rounded bg-white/[0.02] border border-white/5 flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-cyan-400" />
@@ -201,7 +203,7 @@ export default function FoundationPage() {
           </motion.div>
 
           {/* Card 4: Design System Palette Swatches */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.25 }}
@@ -253,7 +255,7 @@ export default function FoundationPage() {
         </div>
 
         {/* Roadmap Banner for Next Steps */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
