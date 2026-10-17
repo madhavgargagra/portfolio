@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ExternalLink,
   Sparkles,
-  Activity,
-  ShieldCheck,
+  ArrowRight,
   Code2,
-  ShoppingBag,
-  Terminal
+  Lock,
+  Cpu,
+  Layers,
+  Activity
 } from 'lucide-react';
 import { projectsData } from '../data/projectsData.js';
 
@@ -18,20 +20,23 @@ const GithubIcon = ({ className = 'w-4 h-4' }) => (
   </svg>
 );
 
-const renderVisualIcon = (iconName, className) => {
-  switch (iconName) {
-    case 'Activity': return <Activity className={className} />;
-    case 'ShieldCheck': return <ShieldCheck className={className} />;
-    case 'Code2': return <Code2 className={className} />;
-    case 'ShoppingBag': return <ShoppingBag className={className} />;
-    default: return <Terminal className={className} />;
+const getProjectIcon = (category) => {
+  switch (category) {
+    case 'Applied AI & Web':
+      return <Cpu className="w-4 h-4 sm:w-5 sm:h-5 text-[#C7A052]" />;
+    case 'Machine Learning':
+      return <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-[#C7A052]" />;
+    case 'Cybersecurity & Enterprise':
+      return <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-[#C7A052]" />;
+    default:
+      return <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-[#C7A052]" />;
   }
 };
 
 export default function ProjectShowcase() {
   const [activeCategory, setActiveCategory] = useState('All');
 
-  const categories = ['All', 'Distributed Systems', 'Cybersecurity', 'Developer Tools', 'Full-Stack Web'];
+  const categories = ['All', 'Applied AI & Web', 'Machine Learning', 'Cybersecurity & Enterprise', 'Full-Stack Systems'];
 
   const filteredProjects = activeCategory === 'All'
     ? projectsData
@@ -53,9 +58,9 @@ export default function ProjectShowcase() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border border-[#C7A052]/40 bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] mb-3 sm:mb-4 shadow-xs">
               <Sparkles className="w-3.5 h-3.5 text-[#C7A052] shrink-0" />
-              <span className="font-semibold uppercase tracking-wider">Engineering Portfolio</span>
+              <span className="font-semibold uppercase tracking-wider">Project Portfolio</span>
               <span className="text-[#252522]/30 dark:text-white/30">&bull;</span>
-              <span>Selected Works</span>
+              <span>Verified Engineering</span>
             </div>
 
             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] tracking-tight">
@@ -63,7 +68,7 @@ export default function ProjectShowcase() {
             </h2>
 
             <p className="text-sm sm:text-base lg:text-lg font-sans text-[#252522]/75 dark:text-[#E6E4DE]/75 mt-2.5 sm:mt-3 leading-relaxed">
-              Full-stack web applications, distributed event systems, and access control architectures developed on the modern MERN stack.
+              Applied machine learning applications, browser-based AI classifiers, enterprise security analytics, and relational database systems.
             </p>
           </div>
 
@@ -73,7 +78,7 @@ export default function ProjectShowcase() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`min-h-[44px] px-4 py-2 rounded-full text-xs font-mono transition-all whitespace-nowrap border flex items-center justify-center shrink-0 ${
+                className={`min-h-[44px] px-4 py-2 rounded-full text-xs font-mono transition-all whitespace-nowrap border flex items-center justify-center shrink-0 cursor-pointer ${
                   activeCategory === cat
                     ? 'border-[#252522] dark:border-white bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] font-semibold shadow-xs'
                     : 'border-[#252522]/15 dark:border-white/10 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522]/70 dark:text-[#E6E4DE]/70 hover:border-[#C7A052]'
@@ -90,7 +95,7 @@ export default function ProjectShowcase() {
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, idx) => (
               <motion.article
-                key={project.id}
+                key={project.slug}
                 layout
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -103,21 +108,23 @@ export default function ProjectShowcase() {
                   <div className="flex items-center justify-between mb-5 sm:mb-6">
                     <div className="flex items-center gap-2.5">
                       <div className="p-2 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10 text-[#C7A052]">
-                        {renderVisualIcon(project.visual.iconName, 'w-4 h-4 sm:w-5 sm:h-5')}
+                        {getProjectIcon(project.category)}
                       </div>
-                      <span className={`px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-mono font-medium border ${project.visual.badgeClass}`}>
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-mono font-medium border border-[#C7A052]/30 bg-[#C7A052]/10 text-[#C7A052]">
                         {project.category}
                       </span>
                     </div>
 
-                    <span className="text-xs font-mono text-[#252522]/40 dark:text-white/40">
-                      0{idx + 1}
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-[#252522]/5 dark:bg-white/5 text-[#252522]/70 dark:text-[#E6E4DE]/70 border border-[#252522]/10 dark:border-white/10">
+                      {project.badge}
                     </span>
                   </div>
 
                   {/* Title & Subtitle */}
                   <h3 className="text-xl sm:text-2xl lg:text-3xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] group-hover:text-[#C7A052] transition-colors leading-tight mb-1.5 sm:mb-2">
-                    {project.title}
+                    <Link to={`/projects/${project.slug}`}>
+                      {project.title}
+                    </Link>
                   </h3>
 
                   <p className="text-xs sm:text-sm font-sans font-medium text-[#C7A052] mb-3 sm:mb-4">
@@ -149,7 +156,7 @@ export default function ProjectShowcase() {
                       Core Technology Stack
                     </span>
                     <div className="flex flex-wrap gap-1.5">
-                      {project.technologies.map((tech) => (
+                      {project.technologies.slice(0, 5).map((tech) => (
                         <span
                           key={tech}
                           className="px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-mono bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10 text-[#252522] dark:text-[#E6E4DE]"
@@ -157,64 +164,78 @@ export default function ProjectShowcase() {
                           {tech}
                         </span>
                       ))}
+                      {project.technologies.length > 5 && (
+                        <span className="px-2 py-1 rounded-md text-[10px] font-mono text-[#C7A052]">
+                          +{project.technologies.length - 5} more
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
 
-                {/* Bottom Actions: GitHub & Live Demo Links */}
+                {/* Bottom Actions: View Details, GitHub & Live Demo Links */}
                 <div className="pt-5 sm:pt-6 border-t border-[#252522]/10 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-                    {/* GitHub Link */}
+                    {/* View Details Link */}
+                    <Link
+                      to={`/projects/${project.slug}`}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] text-xs font-mono font-medium hover:bg-[#C7A052] dark:hover:bg-[#C7A052] dark:hover:text-white transition-colors"
+                    >
+                      <span>View Case Study</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+
+                    {/* GitHub Link (if public) */}
                     {project.links.github.isAvailable ? (
                       <a
                         href={project.links.github.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2.5 min-h-[44px] rounded-xl bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] text-xs font-mono font-medium hover:bg-[#C7A052] dark:hover:bg-[#C7A052] dark:hover:text-white transition-colors"
+                        className="inline-flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl border border-[#252522]/20 dark:border-white/20 hover:border-[#C7A052] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] transition-colors"
                       >
                         <GithubIcon className="w-3.5 h-3.5" />
-                        <span>Repository</span>
+                        <span>Code</span>
                       </a>
                     ) : (
-                      <div
-                        className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2.5 min-h-[44px] rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/15 dark:border-white/10 text-xs font-mono text-[#252522]/50 dark:text-white/40 cursor-not-allowed select-none"
-                        title="Repository link: Project source code is staged for final assignment submission"
-                      >
-                        <GithubIcon className="w-3.5 h-3.5 opacity-60" />
-                        <span>{project.links.github.label}</span>
-                      </div>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-2 text-[11px] font-mono text-[#252522]/50 dark:text-white/40">
+                        <Lock className="w-3 h-3 text-[#C7A052]" />
+                        <span>{project.badge}</span>
+                      </span>
                     )}
 
-                    {/* Live Demo Link */}
-                    {project.links.liveDemo.isAvailable ? (
+                    {/* Live Demo Link (if available) */}
+                    {project.links.liveDemo.isAvailable && (
                       <a
                         href={project.links.liveDemo.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2.5 min-h-[44px] rounded-xl border border-[#C7A052] bg-white dark:bg-[#121316] text-[#252522] dark:text-white text-xs font-mono font-medium hover:bg-[#C7A052] hover:text-white transition-colors"
+                        className="inline-flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl border border-[#C7A052]/60 hover:bg-[#C7A052] hover:text-white text-xs font-mono text-[#C7A052] transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Live Demo</span>
+                        <span>Demo</span>
                       </a>
-                    ) : (
-                      <div
-                        className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2.5 min-h-[44px] rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/15 dark:border-white/10 text-xs font-mono text-[#252522]/50 dark:text-white/40 cursor-not-allowed select-none"
-                        title="Live Demo link: Interactive demo staging cluster"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-                        <span>{project.links.liveDemo.label}</span>
-                      </div>
                     )}
                   </div>
 
                   <span className="text-[10px] sm:text-[11px] font-mono text-[#252522]/40 dark:text-white/40">
-                    MERN Prototype
+                    Verified
                   </span>
                 </div>
 
               </motion.article>
             ))}
           </AnimatePresence>
+        </div>
+
+        {/* Explore All Projects Link Banner */}
+        <div className="mt-12 text-center">
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-full border border-[#C7A052] bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono font-medium text-[#252522] dark:text-[#E6E4DE] hover:bg-[#C7A052] hover:text-white dark:hover:bg-[#C7A052] dark:hover:text-white transition-all shadow-xs"
+          >
+            <span>Explore Complete Projects Portfolio &amp; Future Work</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
       </div>

@@ -176,30 +176,32 @@ export default function CertificationsSection() {
                         {cert.title}
                       </h4>
 
-                      {/* Credential ID Strip with Copy Feature */}
+                      {/* Credential Status Strip */}
                       <div className="flex items-center justify-between p-3 rounded-xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border border-[#252522]/8 dark:border-white/5 mb-4 text-xs font-mono">
                         <div className="truncate mr-2">
                           <span className="text-[#252522]/50 dark:text-white/40 block text-[10px] uppercase tracking-wider font-semibold">
                             CREDENTIAL STATUS
                           </span>
                           <span className="text-[#252522] dark:text-[#FAF7F2] font-semibold truncate block mt-0.5">
-                            {cert.credentialId}
+                            {cert.isAttendance ? 'Certificate of Attendance' : 'Coursework Completed & Verified'}
                           </span>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => handleCopyId(cert.credentialId)}
-                          className="w-11 h-11 rounded-lg text-[#252522]/60 dark:text-white/60 hover:text-[#C7A052] hover:bg-[#FAF7F2] dark:hover:bg-[#191C22] transition-colors shrink-0 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
-                          title="Copy Credential Status"
-                          aria-label="Copy Credential Status"
-                        >
-                          {copiedId === cert.credentialId ? (
-                            <Check className="w-4 h-4 text-emerald-500" />
-                          ) : (
-                            <Copy className="w-4 h-4" />
-                          )}
-                        </button>
+                        {cert.badgeUrl ? (
+                          <a
+                            href={cert.badgeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-[#FAF7F2] dark:bg-[#191C22] border border-[#C7A052]/40 text-[#C7A052] hover:bg-[#C7A052] hover:text-white transition-colors"
+                          >
+                            <span>Credly</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : (
+                          <span className="px-2 py-1 rounded text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+                            Verified
+                          </span>
+                        )}
                       </div>
 
                       {/* Issue Date & Validity */}
@@ -279,28 +281,26 @@ export default function CertificationsSection() {
 
                     {/* Bottom Credential URL */}
                     <div className="pt-4 border-t border-[#252522]/10 dark:border-white/10 flex items-center justify-between gap-3 text-xs font-mono">
-                      {cert.credentialUrl ? (
+                      {cert.badgeUrl ? (
                         <a
-                          href={cert.credentialUrl}
+                          href={cert.badgeUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1.5 min-h-[44px] text-[#C7A052] hover:text-[#252522] dark:hover:text-white font-semibold transition-colors"
                         >
-                          <span>Verify Credential URL</span>
+                          <span>{cert.verificationLabel || 'View Credly Badge'}</span>
                           <ExternalLink className="w-3.5 h-3.5" />
                         </a>
                       ) : (
                         <div
-                          className="inline-flex items-center gap-1.5 min-h-[44px] text-[#252522]/50 dark:text-white/40 cursor-not-allowed select-none"
-                          title="Credential link: Archival verification link will be added upon certificate submission"
+                          className="inline-flex items-center gap-1.5 min-h-[44px] text-[#252522]/50 dark:text-white/40 select-none"
                         >
-                          <span>Verification Slot [Ready]</span>
-                          <ExternalLink className="w-3.5 h-3.5 opacity-50" />
+                          <span>{cert.verificationLabel || 'Coursework Verified'}</span>
                         </div>
                       )}
 
                       <span className="text-[10px] sm:text-[11px] text-[#252522]/40 dark:text-white/40 hidden sm:inline">
-                        Evaluated Coursework
+                        {cert.creditHours || 'Evaluated Coursework'}
                       </span>
                     </div>
                   </motion.div>

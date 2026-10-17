@@ -47,8 +47,8 @@ export default function FoundationPage() {
       <header className="sticky top-0 z-50 backdrop-blur-md bg-canvas/80 border-b border-white/5">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <a href="/" className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent-blue rounded-lg">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-tr from-accent-blue to-accent-violet flex items-center justify-center text-canvas font-black font-mono shadow-glow-blue/50">
-              M
+            <div className="h-9 w-9 rounded-lg bg-[#15171C] border border-[#C7A052]/30 p-1 flex items-center justify-center shadow-xs">
+              <img src="/logo.png" alt="Madhav Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <span className="font-bold text-slate-100 text-sm tracking-tight block group-hover:text-accent-blue transition-colors">madhav.dev</span>

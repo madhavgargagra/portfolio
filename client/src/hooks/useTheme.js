@@ -4,16 +4,16 @@ import { useState, useEffect } from 'react';
  * useTheme Hook
  * 
  * Manages light / dark mode by toggling the 'dark' class on document.documentElement.
- * Persists theme preference to localStorage. Defaults to light mode (warm ivory baseline).
+ * Persists theme preference to localStorage. Defaults to dark mode as requested.
  */
 export function useTheme() {
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme');
       if (saved) return saved;
-      return 'light'; // Light mode is default warm ivory
+      return 'dark'; // Dark mode is enabled by default
     }
-    return 'light';
+    return 'dark';
   });
 
   useEffect(() => {

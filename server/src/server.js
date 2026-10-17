@@ -49,9 +49,20 @@ app.use(cors((req, callback) => {
 app.use(express.json({ limit: '50kb' }));
 app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 
-// Serve static backend assets (resumes, public downloads) with open CORS
+// Serve static backend assets (resumes, public downloads) with open CORS and explicit headers
 const publicDir = path.join(__dirname, '../public');
-app.use('/public', cors(), express.static(publicDir));
+app.use('/public', cors(), express.static(publicDir, {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.pdf')) {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'inline; filename="Madhav-Garg-Resume.pdf"');
+    } else if (filePath.endsWith('.docx')) {
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      res.setHeader('Content-Disposition', 'attachment; filename="Madhav-Garg-Resume.docx"');
+    }
+  },
+}));
+
 
 // Serve production client build if compiled with open CORS
 const clientDistDir = path.join(__dirname, '../../client/dist');

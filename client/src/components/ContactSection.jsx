@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { sendContactMessage } from '../services/contactService.js';
 import { API_ENDPOINTS } from '../config/api.js';
+import { personalData } from '../data/personalData.js';
 
 // Standard RFC 5322-compliant email pattern for client validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -198,7 +199,7 @@ export default function ContactSection() {
   };
 
   const handleCopyEmail = () => {
-    const emailToCopy = 'madhav.garg@jklu.edu.in';
+    const emailToCopy = personalData.email;
     if (navigator?.clipboard?.writeText) {
       navigator.clipboard.writeText(emailToCopy);
     }
@@ -286,9 +287,9 @@ export default function ContactSection() {
                       <Mail className="w-3.5 h-3.5" />
                     </div>
                     <div className="truncate">
-                      <span className="text-[#252522]/50 dark:text-white/40 block text-[10px] uppercase font-semibold">Institutional Contact</span>
+                      <span className="text-[#252522]/50 dark:text-white/40 block text-[10px] uppercase font-semibold">Verified Contact</span>
                       <span className="text-[#252522] dark:text-[#FAF7F2] font-semibold truncate block text-xs">
-                        madhav.garg@jklu.edu.in
+                        {personalData.email}
                       </span>
                     </div>
                   </div>

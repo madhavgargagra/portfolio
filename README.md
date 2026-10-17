@@ -133,12 +133,13 @@ MONGODB_URI=mongodb://localhost:27017/madhav_portfolio
 ```
 
 ### 2. Frontend (`client/.env`)
-Create `client/.env` based on `client/.env.example`:
+Optional. The frontend automatically defaults to relative same-origin API URLs (`''`), working seamlessly with Express unified hosting and the Vite development proxy.
+
+When hosting the frontend separately from the backend (e.g., Vercel + Render split deployment), create `client/.env` based on `client/.env.example`:
 
 ```env
 # Set when frontend is hosted separately from backend (e.g. Vercel)
-# In development or unified hosting, this defaults automatically.
-VITE_API_BASE_URL=http://localhost:5000
+VITE_API_BASE_URL=https://madhav-portfolio-rpef.onrender.com
 ```
 
 ---

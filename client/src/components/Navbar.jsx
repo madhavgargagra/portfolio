@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowUpRight, Compass, Sun, Moon } from 'lucide-react';
 import Logo from './Logo.jsx';
@@ -8,6 +9,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,13 +19,17 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
   const navLinks = [
-    { label: 'Overview', href: '#hero' },
-    { label: 'Projects', href: '#showcase' },
-    { label: 'About & Skills', href: '#about' },
-    { label: 'Timeline', href: '#timeline' },
-    { label: 'Credentials', href: '#credentials' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Home', path: '/' },
+    { label: 'Projects', path: '/projects' },
+    { label: 'About', path: '/about' },
+    { label: 'Certifications', path: '/certifications' },
+    { label: 'Contact', path: '/contact' },
   ];
 
   return (
@@ -36,13 +42,13 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
         {/* Top-Left Logo with Accessible Target */}
-        <a
-          href="#hero"
+        <Link
+          to="/"
           aria-label="Madhav Garg Portfolio Homepage"
           className="outline-none focus:ring-2 focus:ring-[#C7A052] rounded-xl shrink-0"
         >
           <Logo />
-        </a>
+        </Link>
 
         {/* Desktop Nav Links */}
         <nav
@@ -50,13 +56,30 @@ export default function Navbar() {
           className="hidden md:flex items-center gap-7 lg:gap-8 text-sm font-sans font-medium text-[#252522]/80 dark:text-[#E6E4DE]/80"
         >
           {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="relative py-2 transition-colors hover:text-[#C7A052] dark:hover:text-[#C7A052] focus:outline-none focus:text-[#C7A052]"
+            <NavLink
+              key={link.path}
+              to={link.path}
+              className={({ isActive }) =>
+                `relative py-2 transition-colors focus:outline-none focus:text-[#C7A052] ${
+                  isActive
+                    ? 'text-[#C7A052] font-semibold'
+                    : 'text-[#252522]/80 dark:text-[#E6E4DE]/80 hover:text-[#C7A052] dark:hover:text-[#C7A052]'
+                }`
+              }
             >
-              {link.label}
-            </a>
+              {({ isActive }) => (
+                <>
+                  <span>{link.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNavIndicator"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#C7A052] rounded-full"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </>
+              )}
+            </NavLink>
           ))}
         </nav>
 
@@ -66,7 +89,7 @@ export default function Navbar() {
           <button
             onClick={toggleTheme}
             aria-label={isDark ? 'Switch to Ivory Light Mode' : 'Switch to Dark Mode'}
-            className="w-11 h-11 rounded-full border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522] dark:text-[#E6E4DE] hover:border-[#C7A052] transition-colors focus:outline-none focus:ring-2 focus:ring-[#C7A052] flex items-center justify-center shrink-0"
+            className="w-11 h-11 rounded-full border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522] dark:text-[#E6E4DE] hover:border-[#C7A052] transition-colors focus:outline-none focus:ring-2 focus:ring-[#C7A052] flex items-center justify-center shrink-0 cursor-pointer"
             title={isDark ? 'Activate Ivory Light Mode' : 'Activate Dark Mode'}
           >
             {isDark ? (
@@ -77,14 +100,14 @@ export default function Navbar() {
           </button>
 
           {/* Explore Projects CTA */}
-          <a
-            href="#showcase"
+          <Link
+            to="/projects"
             className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-full border border-[#C7A052] bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono font-medium text-[#252522] dark:text-[#E6E4DE] hover:bg-[#C7A052] hover:text-white dark:hover:bg-[#C7A052] dark:hover:text-white transition-all shadow-xs focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
           >
             <Compass className="w-3.5 h-3.5 text-[#C7A052] group-hover:text-white" />
             <span>Explore Projects</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
-          </a>
+          </Link>
         </div>
 
         {/* Mobile Controls (Theme Toggle + Menu Toggle, both >= 44x44px) */}
@@ -92,7 +115,7 @@ export default function Navbar() {
           <button
             onClick={toggleTheme}
             aria-label={isDark ? 'Switch to Ivory Light Mode' : 'Switch to Dark Mode'}
-            className="w-11 h-11 rounded-xl border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522] dark:text-[#E6E4DE] flex items-center justify-center shrink-0 focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
+            className="w-11 h-11 rounded-xl border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522] dark:text-[#E6E4DE] flex items-center justify-center shrink-0 focus:outline-none focus:ring-2 focus:ring-[#C7A052] cursor-pointer"
             title={isDark ? 'Activate Ivory Light Mode' : 'Activate Dark Mode'}
           >
             {isDark ? <Sun className="w-4 h-4 text-[#C7A052]" /> : <Moon className="w-4 h-4" />}
@@ -102,7 +125,7 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileMenuOpen}
-            className="w-11 h-11 rounded-xl text-[#252522] dark:text-[#E6E4DE] bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/15 dark:border-white/15 flex items-center justify-center shrink-0 focus:outline-none focus:ring-2 focus:ring-[#C7A052]"
+            className="w-11 h-11 rounded-xl text-[#252522] dark:text-[#E6E4DE] bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/15 dark:border-white/15 flex items-center justify-center shrink-0 focus:outline-none focus:ring-2 focus:ring-[#C7A052] cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5 text-[#C7A052]" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -121,25 +144,31 @@ export default function Navbar() {
           >
             <nav aria-label="Mobile Navigation" className="flex flex-col gap-1 font-sans text-sm">
               {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
+                <NavLink
+                  key={link.path}
+                  to={link.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="min-h-[44px] flex items-center px-3 py-2 text-[#252522] dark:text-[#E6E4DE] hover:text-[#C7A052] dark:hover:text-[#C7A052] rounded-lg transition-colors border-b border-[#252522]/5 dark:border-white/5"
+                  className={({ isActive }) =>
+                    `min-h-[44px] flex items-center px-3 py-2 rounded-lg transition-colors border-b border-[#252522]/5 dark:border-white/5 ${
+                      isActive
+                        ? 'text-[#C7A052] font-semibold bg-[#C7A052]/10'
+                        : 'text-[#252522] dark:text-[#E6E4DE] hover:text-[#C7A052] dark:hover:text-[#C7A052]'
+                    }`
+                  }
                 >
                   {link.label}
-                </a>
+                </NavLink>
               ))}
               <div className="pt-2">
-                <a
-                  href="#showcase"
+                <Link
+                  to="/projects"
                   onClick={() => setMobileMenuOpen(false)}
                   className="inline-flex items-center justify-center gap-2 w-full min-h-[44px] py-2.5 rounded-full border border-[#C7A052] bg-[#F5F0E7] dark:bg-[#121316] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] hover:bg-[#C7A052] hover:text-white dark:hover:bg-[#C7A052] dark:hover:text-white transition-all shadow-xs"
                 >
                   <Compass className="w-3.5 h-3.5 text-[#C7A052]" />
                   <span>Explore Projects</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
+                </Link>
               </div>
             </nav>
           </motion.div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../hooks/useTheme.js';
 
 /**
  * Safe sessionStorage helpers for restricted browser environments
@@ -28,31 +29,39 @@ const setSessionItem = (key, value) => {
 /**
  * IntroScreen Component
  *
- * Reliable logo-only intro experience:
- * - Warm ivory baseline (#F5F0E7 / dark mode #111317)
- * - Responsive centered logo slot
- * - Subtle entrance and exit animations powered by Framer Motion
- * - Respects 'prefers-reduced-motion' by minimizing animations rather than skipping
- * - Never gets stuck or blocks the UI if the logo asset is missing
- * - Runs once per browser session via safe sessionStorage helper
- * - Guaranteed single-execution dismissal and auto-dismiss cleanup
- *
- * ----------------------------------------------------------------------------------
- * LOGO ASSET INTEGRATION GUIDE:
- * To use your original logo, save your transparent SVG or PNG at:
- *   -> client/public/logo.svg  (Preferred vector format)
- *   -> client/public/logo.png  (High-resolution raster format)
- * The intro screen and navbar will automatically detect and render it.
- * If the file is not yet present, this component presents a clean neutral slot
- * without initials or invented branding.
- * ----------------------------------------------------------------------------------
+ * Premium, logo-only loading intro experience:
+ * - Shows ONLY the original logo (no text, labels, spinners, or progress bars)
+ * - Substantially larger, responsive, centered horizontally and vertically
+ * - Light theme: warm ivory background (#F5F0E7) with dark charcoal logo treatment
+ * - Dark theme: dark background (#111317) with luminous light logo treatment
+ * - Preserves client/public/logo.png byte-for-byte using CSS filters
+ * - Organic expansion animation: gently expands three strokes outward then settles back
+ * - Auto-dismisses after minimum display duration (1.5s), click/tap to skip
+ * - Safe session storage, unmount cleanup, duplicate-dismissal protection, and reduced-motion support
  */
 export default function IntroScreen({ onComplete }) {
+  const { isDark: themeIsDark } = useTheme();
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark') || themeIsDark;
+    }
+    return themeIsDark;
+  });
+
   const [visible, setVisible] = useState(true);
   const [logoAvailable, setLogoAvailable] = useState(false);
   const [logoSrc, setLogoSrc] = useState(null);
   const [reducedMotion, setReducedMotion] = useState(false);
   const dismissedRef = useRef(false);
+
+  // Sync active theme state with DOM / useTheme hook
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      setIsDark(document.documentElement.classList.contains('dark') || themeIsDark);
+    } else {
+      setIsDark(themeIsDark);
+    }
+  }, [themeIsDark]);
 
   const dismissIntro = useCallback(() => {
     if (dismissedRef.current) return;
@@ -81,47 +90,32 @@ export default function IntroScreen({ onComplete }) {
     }
 
     let mounted = true;
-    let testSvg = null;
     let testPng = null;
 
-    // 3. Proactively test whether client/public/logo.svg or logo.png exists
-    testSvg = new Image();
-    testSvg.src = '/logo.svg';
-    testSvg.onload = () => {
+    // 3. Proactively verify whether client/public/logo.png exists and loads
+    testPng = new Image();
+    testPng.src = '/logo.png';
+    testPng.onload = () => {
       if (!mounted) return;
-      setLogoSrc('/logo.svg');
+      setLogoSrc('/logo.png');
       setLogoAvailable(true);
     };
-    testSvg.onerror = () => {
+    testPng.onerror = () => {
       if (!mounted) return;
-      testPng = new Image();
-      testPng.src = '/logo.png';
-      testPng.onload = () => {
-        if (!mounted) return;
-        setLogoSrc('/logo.png');
-        setLogoAvailable(true);
-      };
-      testPng.onerror = () => {
-        if (!mounted) return;
-        setLogoAvailable(false);
-        setLogoSrc(null);
-      };
+      setLogoAvailable(false);
+      setLogoSrc(null);
     };
 
-    // 4. Guaranteed 1.6-second auto-dismiss timer: never hangs the app
+    // 4. Minimum display duration timer: auto-dismisses after 1.5s
     const timer = setTimeout(() => {
       if (mounted) {
         dismissIntro();
       }
-    }, 1600);
+    }, 1500);
 
     return () => {
       mounted = false;
       clearTimeout(timer);
-      if (testSvg) {
-        testSvg.onload = null;
-        testSvg.onerror = null;
-      }
       if (testPng) {
         testPng.onload = null;
         testPng.onerror = null;
@@ -137,77 +131,85 @@ export default function IntroScreen({ onComplete }) {
           initial={{ opacity: 1 }}
           exit={{
             opacity: 0,
-            transition: { duration: reducedMotion ? 0.1 : 0.5, ease: [0.16, 1, 0.3, 1] },
+            transition: { duration: reducedMotion ? 0.1 : 0.45, ease: [0.16, 1, 0.3, 1] },
           }}
           onClick={dismissIntro}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#F5F0E7] dark:bg-[#111317] transition-colors duration-300 cursor-pointer select-none px-6"
-          aria-label="Portfolio Loading Intro (Click or tap to skip)"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#F5F0E7] dark:bg-[#111317] transition-colors duration-500 cursor-pointer select-none px-6"
+          aria-label="Loading Intro (Click or tap to skip)"
+          role="dialog"
+          aria-modal="true"
         >
           {/* Subtle warm champagne radial aura */}
-          <div className="pointer-events-none absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-[#C7A052]/10 dark:bg-[#C7A052]/5 blur-3xl" />
+          <div className="pointer-events-none absolute w-80 h-80 sm:w-[28rem] sm:h-[28rem] rounded-full bg-[#C7A052]/10 dark:bg-[#C7A052]/5 blur-3xl" />
 
-          {/* Centered Logo Slot */}
+          {/* Centered, Substantially Larger Logo Container */}
           <motion.div
-            initial={reducedMotion ? false : { opacity: 0, scale: 0.92, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="relative flex flex-col items-center"
+            initial={reducedMotion ? false : { scale: 0.92, opacity: 0 }}
+            animate={
+              reducedMotion
+                ? { scale: 1, opacity: 1 }
+                : {
+                    scale: [0.92, 1.07, 1],
+                    opacity: [0, 1, 1],
+                  }
+            }
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : {
+                    duration: 1.4,
+                    times: [0, 0.6, 1],
+                    ease: [0.16, 1, 0.3, 1],
+                  }
+            }
+            className="relative flex items-center justify-center w-48 h-48 xs:w-56 xs:h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 max-w-[85vw] max-h-[50vh] aspect-square"
           >
-            {/* Logo Slot Frame with responsive dimensions */}
-            <div
-              className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] shadow-editorial flex items-center justify-center p-3.5 transition-colors overflow-hidden"
-              title={logoAvailable ? 'Madhav Garg Logo' : 'Logo Asset Slot: Expecting client/public/logo.svg or logo.png'}
-            >
-              {logoAvailable && logoSrc ? (
-                <img
-                  src={logoSrc}
-                  alt="Madhav Garg Logo"
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                /* Clean neutral placeholder with no initials or invented branding */
-                <div
-                  className="w-full h-full rounded-xl border border-dashed border-[#C7A052]/50 dark:border-[#C7A052]/35 flex items-center justify-center p-2"
-                  aria-hidden="true"
-                >
-                  <div className="w-4 h-4 rounded-full border-2 border-dashed border-[#C7A052]/60 dark:border-[#C7A052]/40" />
-                </div>
-              )}
-            </div>
-
-            {/* Subtle Editorial Label */}
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: reducedMotion ? 0 : 0.6,
-                delay: reducedMotion ? 0 : 0.2,
-              }}
-              className="mt-5 text-center"
-            >
-              <h1 className="font-serif font-bold text-lg sm:text-xl text-[#252522] dark:text-[#FAF7F2] tracking-tight">
-                Madhav Garg
-              </h1>
-              <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#C7A052] font-semibold mt-1 block">
-                Portfolio &bull; 2026
-              </span>
-            </motion.div>
-
-            {/* Subtle Progress Indicator Bar */}
-            <div className="w-24 sm:w-32 h-0.5 bg-[#252522]/10 dark:bg-white/10 rounded-full mt-6 overflow-hidden">
-              <motion.div
-                initial={reducedMotion ? { width: '100%' } : { width: '0%' }}
-                animate={{ width: '100%' }}
-                transition={{ duration: reducedMotion ? 0 : 1.4, ease: 'easeInOut' }}
-                className="h-full bg-[#C7A052]"
+            {logoAvailable && logoSrc ? (
+              <motion.img
+                src={logoSrc}
+                alt="Madhav Garg Logo"
+                animate={
+                  reducedMotion
+                    ? undefined
+                    : {
+                        filter: isDark
+                          ? [
+                              'brightness(0.9) drop-shadow(0 0 0px rgba(199,160,82,0))',
+                              'brightness(1.2) drop-shadow(0 0 35px rgba(199,160,82,0.35))',
+                              'brightness(1) drop-shadow(0 0 15px rgba(199,160,82,0.18))',
+                            ]
+                          : [
+                              'brightness(0) opacity(0.7) drop-shadow(0 0 0px rgba(37,37,34,0))',
+                              'brightness(0) opacity(0.96) drop-shadow(0 8px 24px rgba(37,37,34,0.18))',
+                              'brightness(0) opacity(0.88) drop-shadow(0 4px 12px rgba(37,37,34,0.1))',
+                            ],
+                      }
+                }
+                transition={
+                  reducedMotion
+                    ? { duration: 0 }
+                    : {
+                        duration: 1.4,
+                        times: [0, 0.6, 1],
+                        ease: [0.16, 1, 0.3, 1],
+                      }
+                }
+                className={`w-full h-full object-contain select-none pointer-events-none ${
+                  isDark
+                    ? 'drop-shadow-[0_0_20px_rgba(199,160,82,0.2)]'
+                    : 'brightness-0 opacity-[0.88] drop-shadow-[0_4px_16px_rgba(37,37,34,0.12)]'
+                }`}
               />
-            </div>
+            ) : (
+              /* Clean neutral fallback if logo asset fails to load */
+              <div
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl border-2 border-dashed border-[#C7A052]/50 dark:border-[#C7A052]/35 flex items-center justify-center p-4"
+                aria-hidden="true"
+              >
+                <div className="w-8 h-8 rounded-full border-2 border-dashed border-[#C7A052]/60 dark:border-[#C7A052]/40" />
+              </div>
+            )}
           </motion.div>
-
-          {/* Accessible Skip Cue */}
-          <span className="absolute bottom-6 font-mono text-[10px] text-[#252522]/40 dark:text-white/30 tracking-widest uppercase">
-            Click to continue
-          </span>
         </motion.div>
       )}
     </AnimatePresence>

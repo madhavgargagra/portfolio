@@ -1,7 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowDown, FileDown, Sparkles, Compass } from 'lucide-react';
+import { FileDown, Sparkles, Compass, GraduationCap, Award, MapPin } from 'lucide-react';
 import { API_ENDPOINTS } from '../config/api.js';
+import { personalData } from '../data/personalData.js';
 
 export default function HeroSection() {
   return (
@@ -28,7 +30,9 @@ export default function HeroSection() {
               className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border border-[#C7A052]/40 bg-[#FAF7F2] dark:bg-[#191C22] text-[11px] sm:text-xs font-mono text-[#252522] dark:text-[#E6E4DE] mb-5 sm:mb-6 shadow-xs max-w-full"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#C7A052] shrink-0" />
-              <span className="tracking-wide truncate">Full-Stack MERN &bull; Creative Frontend</span>
+              <span className="tracking-wide truncate">
+                {personalData.headline}
+              </span>
             </motion.div>
 
             {/* Prominent Name */}
@@ -49,7 +53,7 @@ export default function HeroSection() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="text-base sm:text-lg lg:text-xl font-sans text-[#252522]/80 dark:text-[#E6E4DE]/80 max-w-xl leading-relaxed mb-6 sm:mb-8"
             >
-              Building scalable full-stack web applications and high-performance interactive architectures. Grounded in computational rigour, clean API contracts, and polished editorial user experiences.
+              {personalData.introCopy}
             </motion.p>
 
             {/* CTAs */}
@@ -60,49 +64,61 @@ export default function HeroSection() {
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto"
             >
               {/* Primary CTA */}
-              <a
-                href="#showcase"
+              <Link
+                to="/projects"
                 className="inline-flex items-center justify-center gap-2.5 px-6 py-3 min-h-[44px] rounded-full bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] text-sm font-sans font-medium hover:bg-[#C7A052] dark:hover:bg-[#C7A052] dark:hover:text-white transition-colors shadow-sm w-full sm:w-auto"
               >
                 <span>Explore Projects</span>
                 <Compass className="w-4 h-4 text-[#C7A052] group-hover:text-white" />
-              </a>
+              </Link>
 
               {/* Dual CV Download CTAs (PDF & DOCX, both min-44px touch targets) */}
               <div className="inline-flex items-center justify-center rounded-full border border-[#252522]/20 dark:border-white/20 bg-[#FAF7F2] dark:bg-[#191C22] p-1 shadow-xs w-full sm:w-auto">
-                <button
-                  type="button"
-                  onClick={() => window.open(API_ENDPOINTS.resumePdf, '_blank')}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-full text-xs font-mono font-medium text-[#252522] dark:text-[#E6E4DE] hover:text-[#C7A052] hover:bg-white dark:hover:bg-[#121316] transition-all flex-1 sm:flex-initial"
+                <a
+                  href={API_ENDPOINTS.resumePdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-full text-xs font-mono font-medium text-[#252522] dark:text-[#E6E4DE] hover:text-[#C7A052] hover:bg-white dark:hover:bg-[#121316] transition-all flex-1 sm:flex-initial cursor-pointer"
                   title="Download Resume in PDF format"
                   aria-label="Download Resume in PDF format"
                 >
                   <FileDown className="w-3.5 h-3.5 text-[#C7A052] shrink-0" />
                   <span>Resume (PDF)</span>
-                </button>
+                </a>
                 <span className="text-[#252522]/25 dark:text-white/20 select-none px-1">|</span>
-                <button
-                  type="button"
-                  onClick={() => window.open(API_ENDPOINTS.resumeDocx, '_blank')}
-                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-full text-xs font-mono text-[#252522]/75 dark:text-[#E6E4DE]/75 hover:text-[#C7A052] hover:bg-white dark:hover:bg-[#121316] transition-all"
+                <a
+                  href={API_ENDPOINTS.resumeDocx}
+                  download="Madhav-Garg-Resume.docx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-full text-xs font-mono text-[#252522]/75 dark:text-[#E6E4DE]/75 hover:text-[#C7A052] hover:bg-white dark:hover:bg-[#121316] transition-all cursor-pointer"
                   title="Download Resume in Word DOCX format"
                   aria-label="Download Resume in Word DOCX format"
                 >
                   <span>DOCX</span>
-                </button>
+                </a>
               </div>
             </motion.div>
 
-            {/* Micro Details */}
+            {/* Verified Academic & Location Details */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-8 sm:mt-10 pt-5 sm:pt-6 border-t border-[#252522]/10 dark:border-white/10 flex flex-wrap gap-4 sm:gap-6 text-xs font-mono text-[#252522]/60 dark:text-[#E6E4DE]/60 w-full"
+              className="mt-8 sm:mt-10 pt-5 sm:pt-6 border-t border-[#252522]/10 dark:border-white/10 flex flex-wrap gap-4 sm:gap-6 text-xs font-mono text-[#252522]/70 dark:text-[#E6E4DE]/70 w-full"
             >
-              <span>Origin: JKLU, Jaipur</span>
-              <span>Degree: B.Tech CSE (Semester 5)</span>
-              <span>Focus: Full-Stack MERN</span>
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[#C7A052]" />
+                {personalData.location}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <GraduationCap className="w-3.5 h-3.5 text-[#C7A052]" />
+                B.Tech CSE &bull; Class of {personalData.expectedGraduation}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Award className="w-3.5 h-3.5 text-[#C7A052]" />
+                CGPA: {personalData.cgpa} / 10.0
+              </span>
             </motion.div>
           </div>
 
@@ -123,50 +139,33 @@ export default function HeroSection() {
 
               {/* Center Typographic Motif */}
               <div className="my-auto py-6 text-center flex flex-col items-center">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-5 flex items-center justify-center">
-                  <div className="absolute inset-0 rounded-full border border-[#C7A052]/40 animate-[spin_20s_linear_infinite]" />
-                  <div className="absolute inset-2 rounded-full border border-dashed border-[#252522]/20 dark:border-white/20" />
-                  <span className="font-serif text-4xl sm:text-5xl font-bold text-[#252522] dark:text-[#FAF7F2]">M</span>
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-5 flex items-center justify-center p-2 rounded-2xl bg-[#15171C] border border-[#C7A052]/30 shadow-editorial">
+                  <div className="absolute -inset-2 rounded-3xl border border-[#C7A052]/40 animate-[spin_20s_linear_infinite]" />
+                  <img
+                    src="/logo.png"
+                    alt="Madhav Garg Logo"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#252522] dark:text-[#FAF7F2] tracking-tight">
-                  Architectural Rigour
+                  Software &amp; Systems Engineering
                 </h3>
                 <p className="font-sans text-xs text-[#252522]/70 dark:text-[#E6E4DE]/60 max-w-xs mt-2 leading-relaxed">
-                  Clean separation of concerns: Express REST services, MongoDB persistence, and responsive React interfaces.
+                  Grounded in computational rigour, verified REST and ML pipelines, and responsive client architectures.
                 </p>
               </div>
 
               {/* Quick Tech Badges */}
               <div className="pt-4 border-t border-[#252522]/10 dark:border-white/10 grid grid-cols-3 gap-2 text-center text-[10px] sm:text-[11px] font-mono text-[#252522]/80 dark:text-[#E6E4DE]/80">
-                <div className="p-2 rounded-lg bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/5 dark:border-white/5 truncate">React 19</div>
-                <div className="p-2 rounded-lg bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/5 dark:border-white/5 truncate">Express REST</div>
-                <div className="p-2 rounded-lg bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/5 dark:border-white/5 truncate">MongoDB</div>
+                <span className="p-2 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/5 truncate">React &bull; MERN</span>
+                <span className="p-2 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/5 truncate">FastAPI &bull; Python</span>
+                <span className="p-2 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/5 truncate">ML &bull; GIS Tools</span>
               </div>
-
             </div>
           </motion.div>
 
         </div>
       </div>
-
-      {/* Scroll Down Cue */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="max-w-7xl mx-auto px-4 sm:px-8 w-full z-10 text-center flex flex-col items-center gap-1.5 pt-2"
-      >
-        <span className="text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-[#252522]/60 dark:text-[#E6E4DE]/50">
-          Scroll to Explore Project Showcase
-        </span>
-        <a
-          href="#showcase"
-          aria-label="Scroll to Projects"
-          className="w-11 h-11 rounded-full text-[#C7A052] hover:bg-[#FAF7F2] dark:hover:bg-[#191C22] transition-colors flex items-center justify-center animate-bounce"
-        >
-          <ArrowDown className="w-4 h-4" />
-        </a>
-      </motion.div>
     </section>
   );
 }

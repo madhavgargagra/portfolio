@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   GraduationCap,
@@ -7,45 +8,60 @@ import {
   Wrench,
   Sparkles,
   MapPin,
-  Award
+  Award,
+  Globe,
+  ArrowRight
 } from 'lucide-react';
+import { personalData } from '../data/personalData.js';
 
 export default function AboutSection() {
   const skillGroups = [
     {
-      groupTitle: 'Frontend Engineering',
+      groupTitle: 'Frontend & Web Engineering',
       icon: Code,
       accentColor: '#C7A052',
       skills: [
-        { name: 'React 19 & React Router', level: 92, focus: 'Component trees, hooks, custom routers & state' },
+        { name: 'React 19 & React Router', level: 92, focus: 'Component architecture, hooks, multi-page client routing' },
         { name: 'JavaScript (ES6+)', level: 90, focus: 'Async/await, closures, prototypes, event loop' },
         { name: 'Tailwind CSS v3', level: 95, focus: 'Responsive layouts, design systems, dark mode' },
-        { name: 'Framer Motion', level: 86, focus: 'Layout animations, exit transitions, spring physics' },
-        { name: 'HTML5 Semantic & Accessibility', level: 92, focus: 'ARIA compliance, SEO hierarchy, keyboard navigation' },
+        { name: 'Framer Motion', level: 86, focus: 'Motion transitions, layout animations, spring physics' },
+        { name: 'HTML5 Semantic & A11y', level: 92, focus: 'ARIA compliance, SEO hierarchy, keyboard navigation' },
       ],
     },
     {
-      groupTitle: 'Backend & APIs',
+      groupTitle: 'Backend, APIs & Databases',
       icon: Server,
       accentColor: '#3B82F6',
       skills: [
-        { name: 'Node.js Runtime', level: 88, focus: 'Event-driven I/O, worker threads, stream pipelines' },
-        { name: 'Express.js Framework', level: 90, focus: 'Modular REST routing, CORS policies, error handlers' },
-        { name: 'MongoDB & Mongoose ODM', level: 85, focus: 'Schema validation, indexing, aggregation pipelines' },
-        { name: 'RESTful API Architecture', level: 92, focus: 'Status codes, stateless sessions, payload sanitization' },
-        { name: 'JWT & Authentication Logic', level: 84, focus: 'Token signing, verification middleware, RBAC' },
+        { name: 'Node.js Runtime & Express', level: 90, focus: 'Modular REST routing, CORS policies, error handlers' },
+        { name: 'FastAPI & Python', level: 86, focus: 'Stateless endpoints, Pydantic schemas, JWT authentication' },
+        { name: 'MongoDB & Mongoose ODM', level: 88, focus: 'Schema validation, indexing, aggregation pipelines' },
+        { name: 'MySQL & Sequelize ORM', level: 84, focus: 'Relational schemas, foreign keys, ACID compliance' },
+        { name: 'SQLite & Query Engineering', level: 85, focus: 'Embedded storage, indexing, test environments' },
       ],
     },
     {
-      groupTitle: 'Tools & Technologies',
+      groupTitle: 'Applied AI, ML & Geospatial',
+      icon: Globe,
+      accentColor: '#8B5CF6',
+      skills: [
+        { name: 'Scikit-learn & ML Models', level: 85, focus: 'Isolation Forest, SVM, KNN, XGBoost, Logistic Regression' },
+        { name: 'TensorFlow.js & MobileNet', level: 84, focus: 'In-browser computer vision, client-side model inference' },
+        { name: 'Python Data Science Stack', level: 88, focus: 'Pandas, NumPy, Matplotlib, feature preprocessing' },
+        { name: 'Google Earth Engine & QGIS', level: 82, focus: 'Geospatial analytics, thermal band processing, satellite imagery' },
+        { name: 'Satellite Data Analysis', level: 84, focus: 'Sentinel-5P, MODIS, Landsat-8 remote sensing workflows' },
+      ],
+    },
+    {
+      groupTitle: 'Developer Tools & Workflows',
       icon: Wrench,
       accentColor: '#10B981',
       skills: [
-        { name: 'Vite 8 & Bundlers', level: 88, focus: 'Fast HMR, production tree-shaking, Rollup configs' },
-        { name: 'Git & Version Control', level: 90, focus: 'Branching strategies, commit hygiene, GitHub workflows' },
-        { name: 'npm & Monorepo Workspaces', level: 86, focus: 'Multi-package management, semantic scripts' },
-        { name: 'Postman & API Testing', level: 88, focus: 'Endpoint regression suites, environment mocks' },
-        { name: 'Linux / Bash & PowerShell', level: 82, focus: 'CLI automation, environment variables, permissions' },
+        { name: 'Vite & Bundlers', level: 88, focus: 'HMR, production tree-shaking, Rollup build optimization' },
+        { name: 'Git & Version Control', level: 90, focus: 'Branch hygiene, semantic commits, GitHub CI workflows' },
+        { name: 'Docker & Containerization', level: 82, focus: 'Dockerfile specifications, containerized environments' },
+        { name: 'Postman & Pytest', level: 86, focus: 'API regression test suites, automated unit tests' },
+        { name: 'Linux / Red Hat RH124', level: 85, focus: 'CLI automation, permissions, storage, process management' },
       ],
     },
   ];
@@ -65,48 +81,50 @@ export default function AboutSection() {
         <div className="max-w-3xl mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border border-[#C7A052]/40 bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] mb-3 sm:mb-4 shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-[#C7A052] shrink-0" />
-            <span className="font-semibold uppercase tracking-wider">About & Technical Foundation</span>
+            <span className="font-semibold uppercase tracking-wider">Candidate Profile</span>
+            <span className="text-[#252522]/30 dark:text-white/30">&bull;</span>
+            <span>Education &amp; Competencies</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] tracking-tight">
-            Engineering <span className="italic font-normal text-[#C7A052]">Profile</span>
+            Academic &amp; <span className="italic font-normal text-[#C7A052]">Technical Foundation</span>
           </h2>
 
           <p className="text-sm sm:text-base lg:text-lg font-sans text-[#252522]/80 dark:text-[#E6E4DE]/80 mt-3 sm:mt-4 leading-relaxed">
-            Full-stack developer combining disciplined software architecture with an editorial design sensibility. Currently completing Computer Science coursework at JK Lakshmipat University.
+            {personalData.introCopy}
           </p>
         </div>
 
         {/* Profile Card & Academic Background */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 mb-16 sm:mb-20">
 
-          {/* Left Column: Bio & Core Philosophy (Span 7) */}
+          {/* Left Column: Bio & Verified Context (Span 7) */}
           <div className="lg:col-span-7 flex flex-col gap-6">
             <div className="p-6 sm:p-8 lg:p-10 rounded-3xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/10 dark:border-white/10 shadow-editorial">
               <h3 className="text-xl sm:text-2xl lg:text-3xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] mb-3 sm:mb-4">
-                Disciplined Craft & Systems Thinking
+                Disciplined Architecture &amp; Practical Problem Solving
               </h3>
 
               <p className="text-xs sm:text-sm lg:text-base font-sans text-[#252522]/80 dark:text-[#E6E4DE]/80 leading-relaxed mb-3 sm:mb-4">
-                My approach to software engineering centers on predictable state, clean API boundaries, and accessible user interfaces. I build web applications where the server architecture is resilient and maintainable, while the frontend interface feels intuitive, responsive, and visually harmonious.
+                My work spans full-stack software development, machine learning exploration, and geospatial remote sensing. I prioritize modular code architecture, strict data validation, predictable application state, and accessible, responsive user interfaces across mobile and desktop.
               </p>
 
               <p className="text-xs sm:text-sm font-sans text-[#252522]/70 dark:text-[#E6E4DE]/70 leading-relaxed">
-                As a developer working with the MERN stack (MongoDB, Express, React, Node.js), I prioritize modular folder structures, strict validation schemas, accessible markup, and responsive design systems that perform reliably across mobile, tablet, and desktop viewports.
+                Beyond individual engineering coursework, I have developed collaboration and coordination experience through university software projects, summer internship programs at Infosys Springboard and India Space Academy, and campus society leadership.
               </p>
 
               {/* Status & Location Meta */}
               <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-[#252522]/10 dark:border-white/10 flex flex-wrap items-center justify-between gap-3 sm:gap-4 text-xs font-mono text-[#252522]/70 dark:text-[#E6E4DE]/70">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                   <span className="font-semibold text-[#252522] dark:text-[#FAF7F2]">
-                    Status: B.Tech CSE (Semester 5) &bull; Open for Roles
+                    B.Tech CSE &bull; Class of {personalData.expectedGraduation} (CGPA: {personalData.cgpa})
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5 text-[#C7A052]">
                   <MapPin className="w-4 h-4 shrink-0" />
-                  <span>Jaipur, Rajasthan, India</span>
+                  <span>{personalData.location}</span>
                 </div>
               </div>
             </div>
@@ -119,20 +137,20 @@ export default function AboutSection() {
                 </div>
                 <div>
                   <h4 className="text-lg sm:text-xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2]">
-                    JK Lakshmipat University (JKLU)
+                    {personalData.university}
                   </h4>
                   <span className="text-xs font-mono text-[#252522]/60 dark:text-[#E6E4DE]/60">
-                    B.Tech in Computer Science &amp; Engineering &bull; 2023 &ndash; Present
+                    {personalData.degree} &bull; Expected Graduation: {personalData.expectedGraduation}
                   </span>
                 </div>
               </div>
 
               <p className="text-xs sm:text-sm font-sans text-[#252522]/75 dark:text-[#E6E4DE]/75 leading-relaxed mb-4">
-                Rigorous computer science curriculum combining theoretical algorithmic foundations with practical full-stack software development and database engineering.
+                Comprehensive computing curriculum combining theoretical foundations with hands-on systems architecture, relational databases, and machine learning implementations.
               </p>
 
               <div className="p-3 sm:p-3.5 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10 text-xs font-mono text-[#252522]/75 dark:text-[#E6E4DE]/75 leading-relaxed">
-                <span className="font-semibold text-[#252522] dark:text-[#FAF7F2]">Key Coursework:</span> Full Stack Web Development, Database Management Systems, Data Structures &amp; Algorithms, Operating Systems, Computer Networks.
+                <span className="font-semibold text-[#252522] dark:text-[#FAF7F2]">Key Coursework:</span> Full Stack Web Development, Database Management Systems (DBMS), Data Structures &amp; Algorithms, Operating Systems, Computer Networks.
               </div>
             </div>
           </div>
@@ -142,16 +160,16 @@ export default function AboutSection() {
 
             {/* Quick Profile Overview */}
             <div className="p-6 sm:p-8 rounded-3xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/10 dark:border-white/10 shadow-editorial">
-              <div className="flex items-center gap-3 mb-5 sm:mb-6">
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-[#C7A052] to-[#E2BF7D] flex items-center justify-center text-[#252522] font-serif text-xl sm:text-2xl font-bold shadow-xs shrink-0">
-                  MG
+              <div className="flex items-center gap-3.5 mb-5 sm:mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-[#15171C] border border-[#C7A052]/30 p-2 flex items-center justify-center shadow-xs shrink-0">
+                  <img src="/logo.png" alt="Madhav Garg Logo" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h4 className="font-serif font-bold text-base sm:text-lg text-[#252522] dark:text-[#FAF7F2]">
-                    Madhav Garg
+                    {personalData.name}
                   </h4>
                   <span className="text-xs font-mono text-[#C7A052]">
-                    Full-Stack MERN Developer
+                    {personalData.currentYear}
                   </span>
                 </div>
               </div>
@@ -159,7 +177,7 @@ export default function AboutSection() {
               <div className="space-y-3 text-xs font-mono">
                 <div className="p-3 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10">
                   <span className="text-[#252522]/50 dark:text-white/40 block mb-0.5 uppercase tracking-wider text-[10px]">PROGRAM</span>
-                  <span className="font-bold text-[#252522] dark:text-[#FAF7F2] text-xs sm:text-sm">Bachelor of Technology (CSE)</span>
+                  <span className="font-bold text-[#252522] dark:text-[#FAF7F2] text-xs sm:text-sm">{personalData.degree}</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10">
@@ -168,117 +186,81 @@ export default function AboutSection() {
                 </div>
 
                 <div className="p-3 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10">
-                  <span className="text-[#252522]/50 dark:text-white/40 block mb-0.5 uppercase tracking-wider text-[10px]">ACTIVE SEMESTER</span>
-                  <span className="font-bold text-[#252522] dark:text-[#FAF7F2] text-xs sm:text-sm">Semester 5 (Full-Stack MERN Focus)</span>
+                  <span className="text-[#252522]/50 dark:text-white/40 block mb-0.5 uppercase tracking-wider text-[10px]">ACADEMIC CGPA</span>
+                  <span className="font-bold text-[#252522] dark:text-[#FAF7F2] text-xs sm:text-sm">{personalData.cgpa} / 10.0</span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10">
+                  <span className="text-[#252522]/50 dark:text-white/40 block mb-0.5 uppercase tracking-wider text-[10px]">CONTACT EMAIL</span>
+                  <a href={`mailto:${personalData.email}`} className="font-bold text-[#C7A052] hover:underline text-xs sm:text-sm block truncate">
+                    {personalData.email}
+                  </a>
                 </div>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-[#252522]/10 dark:border-white/10 text-[11px] font-mono text-[#252522]/50 dark:text-[#E6E4DE]/50 italic">
-                [Academic Profile: Coursework, semester timeline, and project milestones are verified]
-              </div>
-            </div>
-
-            {/* Assignment Roadmap Callout */}
-            <div className="p-5 sm:p-6 rounded-3xl border border-[#C7A052]/30 bg-[#FAF7F2]/60 dark:bg-[#191C22]/60">
-              <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#C7A052] mb-2">
-                <Award className="w-4 h-4 shrink-0" />
-                <span>Verified Architecture Flow</span>
-              </div>
-              <p className="text-xs font-sans text-[#252522]/75 dark:text-[#E6E4DE]/75 leading-relaxed mb-3">
-                Timeline, Certifications, and the Express + MongoDB Contact Form are active and fully operational below.
-              </p>
-              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs font-mono font-semibold text-[#C7A052]">
-                <a href="#timeline" className="min-h-[44px] inline-flex items-center hover:text-[#252522] dark:hover:text-white transition-colors">
-                  <span>Timeline</span> &rarr;
-                </a>
-                <span className="text-[#252522]/20 dark:text-white/20 select-none">&bull;</span>
-                <a href="#credentials" className="min-h-[44px] inline-flex items-center hover:text-[#252522] dark:hover:text-white transition-colors">
-                  <span>Certifications</span> &rarr;
-                </a>
-                <span className="text-[#252522]/20 dark:text-white/20 select-none">&bull;</span>
-                <a href="#contact" className="min-h-[44px] inline-flex items-center hover:text-[#252522] dark:hover:text-white transition-colors">
-                  <span>Contact</span> &rarr;
-                </a>
+              <div className="mt-5 pt-4 border-t border-[#252522]/10 dark:border-white/10">
+                <Link
+                  to="/about"
+                  className="inline-flex items-center justify-center gap-2 w-full min-h-[44px] py-2.5 rounded-xl bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] text-xs font-mono font-medium hover:bg-[#C7A052] dark:hover:bg-[#C7A052] dark:hover:text-white transition-colors"
+                >
+                  <span>Explore Full Profile &amp; Leadership</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
 
           </div>
-
         </div>
 
-        {/* Categorized Technical Skills with Animated Indicators & Hover Details */}
+        {/* Categorized Skills Grid */}
         <div>
-          <div className="mb-6 sm:mb-8">
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2]">
-              Categorized Technical Proficiencies
-            </h3>
-            <p className="text-xs font-mono text-[#252522]/60 dark:text-[#E6E4DE]/60 mt-1">
-              Grouped into Frontend, Backend, and Tools &amp; Technologies with animated skill indicators
-            </p>
+          <div className="flex items-center gap-3 mb-8 sm:mb-10">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/10 dark:border-white/10 text-[#C7A052]">
+              <Award className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-xl sm:text-3xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2]">
+                Core Competencies &amp; Technologies
+              </h3>
+              <p className="text-xs sm:text-sm font-sans text-[#252522]/60 dark:text-[#E6E4DE]/60 mt-0.5">
+                Technical competencies verified through academic laboratory assessments, coursework, and internship project delivery.
+              </p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {skillGroups.map((group) => {
-              const Icon = group.icon;
+              const IconComponent = group.icon;
               return (
                 <div
                   key={group.groupTitle}
-                  className="p-6 sm:p-8 rounded-3xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/12 dark:border-white/10 shadow-editorial hover:border-[#C7A052] transition-all flex flex-col justify-between"
+                  className="p-6 sm:p-8 rounded-3xl bg-[#FAF7F2] dark:bg-[#191C22] border border-[#252522]/10 dark:border-white/10 shadow-editorial"
                 >
-                  <div>
-                    {/* Group Header */}
-                    <div className="flex items-center gap-3 mb-5 sm:mb-6 pb-4 border-b border-[#252522]/10 dark:border-white/10">
-                      <div
-                        className="p-2.5 rounded-xl border shrink-0"
-                        style={{
-                          backgroundColor: `${group.accentColor}15`,
-                          borderColor: `${group.accentColor}30`,
-                          color: group.accentColor,
-                        }}
-                      >
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <h4 className="font-serif font-bold text-lg sm:text-xl text-[#252522] dark:text-[#FAF7F2]">
-                        {group.groupTitle}
-                      </h4>
+                  <div className="flex items-center gap-3 mb-6 pb-3 border-b border-[#252522]/10 dark:border-white/10">
+                    <div className="p-2 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10 text-[#C7A052]">
+                      <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
-
-                    {/* Skill Bars with Hover Detail Tooltips */}
-                    <div className="space-y-4 sm:space-y-5">
-                      {group.skills.map((skill) => (
-                        <div key={skill.name} className="group/skill relative">
-                          <div className="flex items-center justify-between text-xs font-mono mb-1.5">
-                            <span className="font-semibold text-[#252522] dark:text-[#FAF7F2] group-hover/skill:text-[#C7A052] transition-colors">
-                              {skill.name}
-                            </span>
-                            <span className="text-[#252522]/50 dark:text-[#E6E4DE]/50">
-                              {skill.level}%
-                            </span>
-                          </div>
-
-                          {/* Animated Progress Indicator Bar */}
-                          <div className="w-full h-2 rounded-full bg-[#F5F0E7] dark:bg-[#121316] overflow-hidden border border-[#252522]/5 dark:border-white/5">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${skill.level}%` }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                              className="h-full rounded-full"
-                              style={{ backgroundColor: group.accentColor }}
-                            />
-                          </div>
-
-                          {/* Detail Context */}
-                          <p className="text-[11px] font-sans text-[#252522]/60 dark:text-[#E6E4DE]/50 mt-1 opacity-80 group-hover/skill:opacity-100 transition-opacity">
-                            {skill.focus}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
+                    <h4 className="font-serif font-bold text-lg sm:text-xl text-[#252522] dark:text-[#FAF7F2]">
+                      {group.groupTitle}
+                    </h4>
                   </div>
 
-                  <div className="mt-6 sm:mt-8 pt-4 border-t border-[#252522]/10 dark:border-white/10 text-[10px] sm:text-[11px] font-mono text-[#252522]/40 dark:text-white/40 text-center">
-                    Verified Competency &bull; MERN Architecture
+                  <div className="space-y-4">
+                    {group.skills.map((skill) => (
+                      <div key={skill.name} className="space-y-1">
+                        <div className="flex items-center justify-between text-xs font-mono">
+                          <span className="font-bold text-[#252522] dark:text-[#FAF7F2]">
+                            {skill.name}
+                          </span>
+                          <span className="text-[11px] text-[#C7A052]">
+                            Verified
+                          </span>
+                        </div>
+                        <p className="text-[11px] font-sans text-[#252522]/70 dark:text-[#E6E4DE]/70 leading-tight">
+                          {skill.focus}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               );

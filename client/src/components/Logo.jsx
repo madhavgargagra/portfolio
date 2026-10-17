@@ -12,17 +12,11 @@ import { motion } from 'framer-motion';
  * - Accessible min-44px touch target
  */
 export default function Logo({ className = '' }) {
-  const [imgSrc, setImgSrc] = useState('/logo.svg');
-  const [triedPng, setTriedPng] = useState(false);
+  const [imgSrc, setImgSrc] = useState('/logo.png');
   const [hasCustomLogo, setHasCustomLogo] = useState(true);
 
   const handleError = () => {
-    if (!triedPng) {
-      setTriedPng(true);
-      setImgSrc('/logo.png');
-    } else {
-      setHasCustomLogo(false);
-    }
+    setHasCustomLogo(false);
   };
 
   return (
@@ -31,9 +25,9 @@ export default function Logo({ className = '' }) {
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={`relative inline-flex items-center gap-2.5 cursor-pointer group min-h-[44px] select-none ${className}`}
-      title={hasCustomLogo ? 'Madhav Garg' : 'Logo Asset Slot: Place client/public/logo.svg or logo.png'}
+      title="Madhav Garg"
     >
-      <div className="relative w-9 h-9 rounded-xl overflow-hidden border border-[#252522]/15 dark:border-white/15 bg-[#FAF7F2] dark:bg-[#191C22] p-1 flex items-center justify-center shadow-xs group-hover:border-[#C7A052] transition-colors shrink-0">
+      <div className="relative w-9 h-9 rounded-xl overflow-hidden border border-[#252522]/20 dark:border-white/15 bg-[#15171C] p-1 flex items-center justify-center shadow-xs group-hover:border-[#C7A052] transition-colors shrink-0">
         {hasCustomLogo ? (
           <img
             src={imgSrc}
@@ -42,7 +36,7 @@ export default function Logo({ className = '' }) {
             className="w-full h-full object-contain"
           />
         ) : (
-          <span className="font-serif font-bold text-base text-[#252522] dark:text-[#FAF7F2] leading-none">
+          <span className="font-serif font-bold text-base text-[#FAF7F2] leading-none">
             M
           </span>
         )}
