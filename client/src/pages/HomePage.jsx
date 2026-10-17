@@ -8,15 +8,16 @@ import Footer from '../components/Footer.jsx';
 /**
  * HomePage
  * 
- * Artistic, cinematic developer portfolio for Madhav Garg.
+ * Polished, professional developer portfolio for Madhav Garg.
  * Flow:
- * Phase 1: Landing Page (Hero)
- * Phase 2: Scroll-Driven Project Showcase (4 Character Themes, 3 Perspectives)
- * Phase 3: Editorial About Section (Profile, Background, Skills)
+ * 1. Landing Page (Hero with animated intro & CV download)
+ * 2. Professional Project Showcase (MERN & systems engineering grid)
+ * 3. Profile & Skills (Categorized proficiencies with animated indicators)
+ * 4. Refined Footer with Express backend status
  */
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#F5F0E7] text-[#252522] selection:bg-[#C7A052]/20 selection:text-[#252522]">
+    <div className="min-h-screen bg-[#F5F0E7] dark:bg-[#111317] text-[#252522] dark:text-[#E6E4DE] selection:bg-[#C7A052]/20 selection:text-[#252522] dark:selection:text-white transition-colors duration-500">
       <Navbar />
       <main>
         <HeroSection />

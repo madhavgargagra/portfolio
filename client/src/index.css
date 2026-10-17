@@ -12,6 +12,11 @@
     background-color: #F5F0E7;
   }
 
+  html.dark {
+    color-scheme: dark;
+    background-color: #111317;
+  }
+
   body {
     @apply bg-ivory text-charcoal font-sans antialiased;
     background-color: #F5F0E7;
@@ -19,9 +24,21 @@
     overflow-x: hidden;
   }
 
+  html.dark body {
+    background-color: #111317;
+    color: #E6E4DE;
+  }
+
   /* Editorial heading styles */
   h1, h2, h3, h4 {
     @apply font-serif tracking-tight text-charcoal;
+  }
+
+  html.dark h1,
+  html.dark h2,
+  html.dark h3,
+  html.dark h4 {
+    color: #FAF7F2;
   }
 }
 
@@ -29,6 +46,10 @@
 .bg-editorial-grain {
   background-image: radial-gradient(rgba(37, 37, 34, 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+html.dark .bg-editorial-grain {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
 }
 
 /* Thin editorial borders */
@@ -58,6 +79,16 @@
   box-shadow: 0 15px 35px -10px rgba(37, 37, 34, 0.08);
 }
 
+html.dark .editorial-surface {
+  background-color: rgba(25, 28, 34, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .editorial-surface:hover {
+  border-color: rgba(199, 160, 82, 0.4);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.3);
+}
+
 /* Refined custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -71,6 +102,10 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #A68239;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #111317;
 }
 
 /* Reduced motion accessibility */

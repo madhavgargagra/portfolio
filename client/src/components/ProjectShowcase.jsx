@@ -1,329 +1,224 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ExternalLink, 
   Layers, 
   Sparkles,
-  ArrowRight,
-  MousePointerClick
+  Activity,
+  ShieldCheck,
+  Code2,
+  ShoppingBag,
+  FolderGit2,
+  Terminal,
+  Filter
 } from 'lucide-react';
 import { projectsData } from '../data/projectsData.js';
-import CharacterVisual from './CharacterVisual.jsx';
 
-const GithubIcon = ({ className = 'w-3.5 h-3.5' }) => (
+// Dedicated Accessible GitHub SVG Icon
+const GithubIcon = ({ className = 'w-4 h-4' }) => (
   <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
   </svg>
 );
 
+// Map visual icon types
+const renderVisualIcon = (iconName, className) => {
+  switch (iconName) {
+    case 'Activity': return <Activity className={className} />;
+    case 'ShieldCheck': return <ShieldCheck className={className} />;
+    case 'Code2': return <Code2 className={className} />;
+    case 'ShoppingBag': return <ShoppingBag className={className} />;
+    default: return <Terminal className={className} />;
+  }
+};
+
 export default function ProjectShowcase() {
-  const containerRef = useRef(null);
+  const [activeCategory, setActiveCategory] = useState('All');
 
-  // States driven primarily by scroll
-  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-  const [activeFrameIndex, setActiveFrameIndex] = useState(0); // 0: Left, 1: Front, 2: Right
-  const [scrollPercent, setScrollPercent] = useState(0);
+  const categories = ['All', 'Distributed Systems', 'Cybersecurity', 'Developer Tools', 'Full-Stack Web'];
 
-  // Framer Motion scroll tracking
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
-
-  // Calculate active character and perspective continuously from scroll progress
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (latest) => {
-      // Clamp between 0 and 0.9999
-      const progress = Math.min(0.9999, Math.max(0, latest));
-      setScrollPercent(Math.round(progress * 100));
-
-      // 4 projects across the scroll span
-      const totalProjects = projectsData.length;
-      const rawProjectIndex = progress * totalProjects;
-      const projIdx = Math.min(totalProjects - 1, Math.floor(rawProjectIndex));
-
-      // Within each project, 3 perspective stages:
-      // 0.0 - 0.33 -> Left Profile
-      // 0.33 - 0.66 -> Front-Facing
-      // 0.66 - 1.00 -> Right Profile
-      const subProgress = rawProjectIndex - projIdx;
-      let frameIdx = 0;
-      if (subProgress < 0.33) {
-        frameIdx = 0; // Left
-      } else if (subProgress < 0.66) {
-        frameIdx = 1; // Front
-      } else {
-        frameIdx = 2; // Right
-      }
-
-      setActiveProjectIndex(projIdx);
-      setActiveFrameIndex(frameIdx);
-    });
-
-    return () => unsubscribe();
-  }, [scrollYProgress]);
-
-  const currentProject = projectsData[activeProjectIndex];
-  const currentFrame = currentProject.frames[activeFrameIndex];
-
-  // Optional manual jump for accessibility
-  const jumpToProject = (projIdx, frameIdx = 0) => {
-    if (!containerRef.current) return;
-    const containerTop = containerRef.current.offsetTop;
-    const totalHeight = containerRef.current.offsetHeight - window.innerHeight;
-    const targetProgress = (projIdx + frameIdx / 3) / projectsData.length;
-    window.scrollTo({
-      top: containerTop + targetProgress * totalHeight + 10,
-      behavior: 'smooth',
-    });
-  };
+  const filteredProjects = activeCategory === 'All'
+    ? projectsData
+    : projectsData.filter((p) => p.category === activeCategory);
 
   return (
     <section 
       id="showcase" 
-      ref={containerRef}
-      // Generous scroll track height giving ample room for 4 characters × 3 views
-      className="relative h-[480vh] w-full"
+      className="relative py-28 px-6 sm:px-8 border-t border-[#252522]/10 dark:border-white/10 bg-[#F5F0E7] dark:bg-[#111317] bg-editorial-grain transition-colors duration-500"
     >
-      {/* Pinned Sticky Viewport: Remains locked to the screen while scrolling */}
-      <div 
-        className="sticky top-0 h-screen w-full flex flex-col justify-between overflow-hidden transition-colors duration-700 bg-editorial-grain py-16 px-6 sm:px-8"
-        style={{
-          backgroundColor: currentProject.colorPalette.bgWash,
-        }}
-      >
-        {/* Full-Page Character Atmospheric Glow */}
-        <div 
-          className="pointer-events-none absolute inset-0 transition-colors duration-700 opacity-40 blur-[140px]"
-          style={{
-            background: `radial-gradient(circle at 30% 50%, ${currentProject.colorPalette.primaryLight} 0%, transparent 65%)`
-          }}
-        />
+      {/* Subtle Ambient Atmosphere */}
+      <div className="pointer-events-none absolute top-1/4 right-1/4 w-[600px] h-[400px] bg-[#C7A052]/10 dark:bg-[#C7A052]/5 blur-[140px] rounded-full" />
+      <div className="pointer-events-none absolute bottom-1/4 left-1/4 w-[500px] h-[400px] bg-[#D9CBB7]/20 dark:bg-slate-800/10 blur-[130px] rounded-full" />
 
-        {/* Top Floating Showcase Bar */}
-        <div className="max-w-7xl mx-auto w-full z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#252522]/15 bg-[#FAF7F2]/90 text-xs font-mono text-[#252522]">
-              <Sparkles className="w-3.5 h-3.5" style={{ color: currentProject.colorPalette.accent }} />
-              <span>Scroll-Driven Cinematic Showcase</span>
-              <span className="text-[#252522]/40">&bull;</span>
-              <span className="text-[11px] font-bold" style={{ color: currentProject.colorPalette.primary }}>
-                SCROLL TO ROTATE
-              </span>
+      <div className="max-w-7xl mx-auto relative z-10">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C7A052]/40 bg-[#FAF7F2] dark:bg-[#191C22] text-xs font-mono text-[#252522] dark:text-[#E6E4DE] mb-4 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#C7A052]" />
+              <span className="font-semibold uppercase tracking-wider">Engineering Portfolio</span>
+              <span className="text-[#252522]/30 dark:text-white/30">&bull;</span>
+              <span>Selected Works</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#252522] mt-1 tracking-tight">
-              0{activeProjectIndex + 1} &bull; {currentProject.characterName} <span className="italic font-normal text-[#C7A052]">Theme</span>
+            
+            <h2 className="text-4xl sm:text-6xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] tracking-tight">
+              Featured <span className="italic font-normal text-[#C7A052]">Projects</span>
             </h2>
+            
+            <p className="text-base sm:text-lg font-sans text-[#252522]/75 dark:text-[#E6E4DE]/75 mt-3 leading-relaxed">
+              Production-ready web applications, distributed event pipelines, and zero-trust security architectures built on the modern MERN stack.
+            </p>
           </div>
 
-          {/* Character Quick Jump Navigation (Accessibility Enhancement) */}
-          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1">
-            {projectsData.map((p, idx) => {
-              const isActive = idx === activeProjectIndex;
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => jumpToProject(idx, 0)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all flex items-center gap-1.5 border ${
-                    isActive 
-                      ? 'border-[#252522] bg-[#252522] text-[#F5F0E7] shadow-sm'
-                      : 'border-[#252522]/15 bg-[#FAF7F2]/80 text-[#252522]/70 hover:border-[#C7A052]'
-                  }`}
-                  title={`Jump to ${p.characterName}`}
-                >
-                  <span 
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: p.colorPalette.primary }}
-                  />
-                  <span>0{idx + 1} {p.characterName.toUpperCase()}</span>
-                </button>
-              );
-            })}
+          {/* Category Filter Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all whitespace-nowrap border ${
+                  activeCategory === cat
+                    ? 'border-[#252522] dark:border-white bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] font-semibold shadow-sm'
+                    : 'border-[#252522]/15 dark:border-white/10 bg-[#FAF7F2] dark:bg-[#191C22] text-[#252522]/70 dark:text-[#E6E4DE]/70 hover:border-[#C7A052]'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Main Pinned Split-Screen: LEFT Character, RIGHT Project Content */}
-        <div className="max-w-7xl mx-auto w-full z-20 my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
-          {/* LEFT: Substantial Waist-Up Character Presence (Span 5 on Desktop) */}
-          <div className="lg:col-span-5 flex justify-center items-center">
-            <CharacterVisual 
-              project={currentProject} 
-              activeFrameIndex={activeFrameIndex}
-              className="w-full"
-            />
-          </div>
-
-          {/* RIGHT: Synchronized Project Details (Span 7 on Desktop) */}
-          <div className="lg:col-span-7 flex flex-col justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`${currentProject.id}-${activeFrameIndex}`}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="p-6 sm:p-10 rounded-3xl border shadow-editorial flex flex-col gap-5 backdrop-blur-sm transition-colors duration-500"
-                style={{
-                  backgroundColor: currentProject.colorPalette.surface,
-                  borderColor: currentProject.colorPalette.border,
-                }}
+        {/* Project Cards Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project, idx) => (
+              <motion.article
+                key={project.id}
+                layout
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="group relative rounded-3xl p-8 sm:p-10 border border-[#252522]/12 dark:border-white/10 bg-[#FAF7F2] dark:bg-[#191C22] shadow-editorial hover:shadow-editorial-hover transition-all duration-400 flex flex-col justify-between"
               >
-                {/* Theme & Perspective Badges */}
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span 
-                    className="px-3 py-1 rounded-full text-xs font-mono font-medium border"
-                    style={{
-                      borderColor: currentProject.colorPalette.border,
-                      color: currentProject.colorPalette.primary,
-                      backgroundColor: currentProject.colorPalette.badgeBg,
-                    }}
-                  >
-                    {currentProject.inspiration}
-                  </span>
-
-                  <span className="text-xs font-mono text-[#252522]/60">
-                    Project 0{activeProjectIndex + 1} of 04
-                  </span>
-                </div>
-
-                {/* Title & Subtitle */}
                 <div>
-                  <h3 className="text-2xl sm:text-4xl font-serif font-bold text-[#252522] tracking-tight leading-tight">
-                    {currentProject.title}
-                  </h3>
-                  <p className="text-sm font-sans font-medium text-[#C7A052] mt-1">
-                    {currentProject.subtitle}
-                  </p>
-                </div>
+                  {/* Top Meta Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-2 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10 text-[#C7A052]">
+                        {renderVisualIcon(project.visual.iconName, 'w-5 h-5')}
+                      </div>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border ${project.visual.badgeClass}`}>
+                        {project.category}
+                      </span>
+                    </div>
 
-                {/* Synchronized Perspective Frame Banner */}
-                <div 
-                  className="p-4 sm:p-5 rounded-2xl border transition-all"
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.6)',
-                    borderColor: currentProject.colorPalette.border,
-                  }}
-                >
-                  <div className="flex items-center justify-between text-xs font-mono mb-1.5">
-                    <span className="font-bold text-[#252522] uppercase tracking-wider">
-                      {currentFrame.perspectiveTitle}
-                    </span>
-                    <span 
-                      className="px-2.5 py-0.5 rounded text-[11px] font-semibold"
-                      style={{
-                        backgroundColor: currentProject.colorPalette.badgeBg,
-                        color: currentProject.colorPalette.primary,
-                      }}
-                    >
-                      {currentFrame.metric}
+                    <span className="text-xs font-mono text-[#252522]/40 dark:text-white/40">
+                      0{idx + 1}
                     </span>
                   </div>
-                  <p className="text-xs font-sans text-[#252522]/80 leading-relaxed">
-                    {currentFrame.details}
-                  </p>
-                </div>
 
-                {/* Summary & Narrative */}
-                <div className="text-xs sm:text-sm font-sans text-[#252522]/80 leading-relaxed space-y-2 border-t border-[#252522]/10 pt-4">
-                  <p className="font-medium text-[#252522]">
-                    {currentProject.summary}
+                  {/* Title & Subtitle */}
+                  <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] group-hover:text-[#C7A052] transition-colors leading-tight mb-2">
+                    {project.title}
+                  </h3>
+                  
+                  <p className="text-xs sm:text-sm font-sans font-medium text-[#C7A052] mb-4">
+                    {project.subtitle}
                   </p>
-                  <p className="text-xs text-[#252522]/70 leading-relaxed hidden sm:block">
-                    {currentProject.longDescription}
-                  </p>
-                </div>
 
-                {/* Technology Badges */}
-                <div className="border-t border-[#252522]/10 pt-4">
-                  <span className="block text-[11px] font-mono uppercase tracking-wider text-[#252522]/60 mb-2">
-                    Architectural Stack
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {currentProject.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2.5 py-1 rounded-md text-xs font-mono bg-[#FAF7F2] border border-[#252522]/10 text-[#252522]"
-                      >
-                        {tech}
-                      </span>
+                  {/* Summary / Description */}
+                  <p className="text-sm font-sans text-[#252522]/80 dark:text-[#E6E4DE]/80 leading-relaxed mb-6">
+                    {project.summary}
+                  </p>
+
+                  {/* Technical Key Metrics Strip */}
+                  <div className="grid grid-cols-3 gap-2 p-3.5 rounded-2xl bg-[#F5F0E7]/80 dark:bg-[#121316]/80 border border-[#252522]/8 dark:border-white/5 mb-6">
+                    {project.metrics.map((metric) => (
+                      <div key={metric.label} className="text-center">
+                        <span className="block text-[10px] font-mono text-[#252522]/50 dark:text-white/40 uppercase tracking-wider mb-0.5">
+                          {metric.label}
+                        </span>
+                        <span className="font-mono text-xs font-bold text-[#252522] dark:text-[#FAF7F2]">
+                          {metric.value}
+                        </span>
+                      </div>
                     ))}
                   </div>
-                </div>
 
-                {/* Links (Clearly Marked Placeholder / Staging status) */}
-                <div className="border-t border-[#252522]/10 pt-4 flex flex-wrap items-center gap-3">
-                  {/* GitHub Link */}
-                  {currentProject.links.github.isAvailable ? (
-                    <a
-                      href={currentProject.links.github.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#252522] text-[#F5F0E7] text-xs font-mono font-medium hover:bg-[#C7A052] transition-colors"
-                    >
-                      <GithubIcon className="w-3.5 h-3.5" />
-                      <span>{currentProject.links.github.label}</span>
-                    </a>
-                  ) : (
-                    <div 
-                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#FAF7F2] border border-[#252522]/15 text-xs font-mono text-[#252522]/60 cursor-not-allowed select-none"
-                      title="Placeholder link: Real GitHub repository will be configured for final submission"
-                    >
-                      <GithubIcon className="w-3.5 h-3.5 opacity-60" />
-                      <span>{currentProject.links.github.label}</span>
+                  {/* Technology Badges */}
+                  <div className="mb-8">
+                    <span className="block text-[11px] font-mono uppercase tracking-wider text-[#252522]/60 dark:text-white/40 mb-2">
+                      Core Technology Stack
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.technologies.map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2.5 py-1 rounded-md text-xs font-mono bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/10 dark:border-white/10 text-[#252522] dark:text-[#E6E4DE]"
+                        >
+                          {tech}
+                        </span>
+                      ))}
                     </div>
-                  )}
-
-                  {/* Live Demo Link */}
-                  {currentProject.links.liveDemo.isAvailable ? (
-                    <a
-                      href={currentProject.links.liveDemo.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#C7A052] bg-white text-[#252522] text-xs font-mono font-medium hover:bg-[#C7A052] hover:text-white transition-colors"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      <span>{currentProject.links.liveDemo.label}</span>
-                    </a>
-                  ) : (
-                    <div 
-                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#FAF7F2] border border-[#252522]/15 text-xs font-mono text-[#252522]/60 cursor-not-allowed select-none"
-                      title="Placeholder link: Live deployment URL configured in subsequent step"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-                      <span>{currentProject.links.liveDemo.label}</span>
-                    </div>
-                  )}
-
-                  {/* Scroll Progression Indicator */}
-                  <div className="ml-auto text-xs font-mono text-[#252522]/50 flex items-center gap-1.5">
-                    <span>Scroll to advance</span>
-                    <span className="font-bold text-[#252522]">{scrollPercent}%</span>
                   </div>
                 </div>
 
-              </motion.div>
-            </AnimatePresence>
-          </div>
+                {/* Bottom Actions: GitHub & Live Demo Links */}
+                <div className="pt-6 border-t border-[#252522]/10 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    {/* GitHub Link */}
+                    {project.links.github.isAvailable ? (
+                      <a
+                        href={project.links.github.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#252522] dark:bg-white text-[#F5F0E7] dark:text-[#111317] text-xs font-mono font-medium hover:bg-[#C7A052] dark:hover:bg-[#C7A052] dark:hover:text-white transition-colors"
+                      >
+                        <GithubIcon className="w-3.5 h-3.5" />
+                        <span>Repository</span>
+                      </a>
+                    ) : (
+                      <div 
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/15 dark:border-white/10 text-xs font-mono text-[#252522]/50 dark:text-white/40 cursor-not-allowed select-none"
+                        title="Repository link: Real GitHub repository will be configured for final submission"
+                      >
+                        <GithubIcon className="w-3.5 h-3.5 opacity-60" />
+                        <span>Source [Staging]</span>
+                      </div>
+                    )}
 
-        </div>
+                    {/* Live Demo Link */}
+                    {project.links.liveDemo.isAvailable ? (
+                      <a
+                        href={project.links.liveDemo.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-[#C7A052] bg-white dark:bg-[#121316] text-[#252522] dark:text-white text-xs font-mono font-medium hover:bg-[#C7A052] hover:text-white transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>Live Demo</span>
+                      </a>
+                    ) : (
+                      <div 
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#F5F0E7] dark:bg-[#121316] border border-[#252522]/15 dark:border-white/10 text-xs font-mono text-[#252522]/50 dark:text-white/40 cursor-not-allowed select-none"
+                        title="Live Demo link: Live URL will be activated upon cloud deployment"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                        <span>Preview [Internal]</span>
+                      </div>
+                    )}
+                  </div>
 
-        {/* Bottom Scroll Progress Rail */}
-        <div className="max-w-7xl mx-auto w-full z-20 pt-2 flex items-center justify-between text-xs font-mono text-[#252522]/60">
-          <div className="flex items-center gap-2">
-            <span className="animate-pulse">&bull;</span>
-            <span>Scrolling controls rotation: Left &rarr; Front &rarr; Right &rarr; Next Character</span>
-          </div>
+                  <span className="text-[11px] font-mono text-[#252522]/40 dark:text-white/40">
+                    MERN Architecture
+                  </span>
+                </div>
 
-          <div className="w-48 sm:w-64 h-1.5 bg-[#252522]/10 rounded-full overflow-hidden">
-            <div 
-              className="h-full rounded-full transition-all duration-150"
-              style={{
-                width: `${scrollPercent}%`,
-                backgroundColor: currentProject.colorPalette.primary,
-              }}
-            />
-          </div>
+              </motion.article>
+            ))}
+          </AnimatePresence>
         </div>
 
       </div>
