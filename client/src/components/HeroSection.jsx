@@ -1,11 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { FileDown, Sparkles, Compass, GraduationCap, Award, MapPin } from 'lucide-react';
 import { API_ENDPOINTS } from '../config/api.js';
 import { personalData } from '../data/personalData.js';
 
 export default function HeroSection() {
+  const shouldReduceMotion = useReducedMotion();
+
+  // Sourced strictly from personalData.subheading and headline
+  const roles = [
+    'Full-Stack Developer',
+    'Machine Learning Enthusiast',
+    'Emerging Technologist',
+    'B.Tech CSE Student',
+  ];
+
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [displayedRole, setDisplayedRole] = useState(roles[0]);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    if (shouldReduceMotion) {
+      setDisplayedRole(roles[0]);
+      return;
+    }
+
+    const currentRole = roles[roleIndex];
+    let timer;
+
+    if (!isDeleting) {
+      if (displayedRole.length < currentRole.length) {
+        timer = setTimeout(() => {
+          setDisplayedRole(currentRole.slice(0, displayedRole.length + 1));
+        }, 75);
+      } else {
+        // Pause at full word before deleting
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, 2200);
+      }
+    } else {
+      if (displayedRole.length > 0) {
+        timer = setTimeout(() => {
+          setDisplayedRole(currentRole.slice(0, displayedRole.length - 1));
+        }, 40);
+      } else {
+        setIsDeleting(false);
+        setRoleIndex((prev) => (prev + 1) % roles.length);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [displayedRole, isDeleting, roleIndex, shouldReduceMotion, roles]);
+
   return (
     <section
       id="hero"
@@ -24,7 +72,7 @@ export default function HeroSection() {
 
             {/* Editorial Badge */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border border-[#C7A052]/40 bg-[#FAF7F2] dark:bg-[#191C22] text-[11px] sm:text-xs font-mono text-[#252522] dark:text-[#E6E4DE] mb-5 sm:mb-6 shadow-xs max-w-full"
@@ -37,20 +85,38 @@ export default function HeroSection() {
 
             {/* Prominent Name */}
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-4xl xs:text-5xl sm:text-7xl lg:text-8xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] tracking-tight leading-[1.08] mb-5 sm:mb-6"
+              className="text-4xl xs:text-5xl sm:text-7xl lg:text-8xl font-serif font-bold text-[#252522] dark:text-[#FAF7F2] tracking-tight leading-[1.08] mb-3 sm:mb-4"
             >
               Madhav <br className="hidden sm:inline" />
               <span className="italic font-normal text-[#C7A052]">Garg</span>.
             </motion.h1>
 
+            {/* Subtle Typewriter Role / Designation Headline (Rubric Compliance) */}
+            <motion.div
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.18 }}
+              className="min-h-[2.25rem] sm:min-h-[2.75rem] flex items-center mb-5 sm:mb-6"
+            >
+              <span className="sr-only">
+                {personalData.subheading}
+              </span>
+              <span className="text-lg xs:text-xl sm:text-2xl lg:text-3xl font-serif font-medium text-[#C7A052] tracking-tight inline-flex items-center" aria-hidden="true">
+                <span>{shouldReduceMotion ? personalData.subheading : displayedRole}</span>
+                {!shouldReduceMotion && (
+                  <span className="inline-block w-[2px] sm:w-[2.5px] h-5 sm:h-7 bg-[#C7A052] ml-1.5 animate-pulse rounded-full align-middle" />
+                )}
+              </span>
+            </motion.div>
+
             {/* Subheading / Developer Narrative */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
+              transition={{ duration: 0.7, delay: 0.25 }}
               className="text-base sm:text-lg lg:text-xl font-sans text-[#252522]/80 dark:text-[#E6E4DE]/80 max-w-xl leading-relaxed mb-6 sm:mb-8"
             >
               {personalData.introCopy}
@@ -58,7 +124,7 @@ export default function HeroSection() {
 
             {/* CTAs */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto"
@@ -102,9 +168,9 @@ export default function HeroSection() {
 
             {/* Verified Academic & Location Details */}
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={shouldReduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.8, delay: 0.35 }}
               className="mt-8 sm:mt-10 pt-5 sm:pt-6 border-t border-[#252522]/10 dark:border-white/10 flex flex-wrap gap-4 sm:gap-6 text-xs font-mono text-[#252522]/70 dark:text-[#E6E4DE]/70 w-full"
             >
               <span className="inline-flex items-center gap-1.5">
@@ -124,7 +190,7 @@ export default function HeroSection() {
 
           {/* Right Column: Editorial Typographic & Geometric Artpiece (Span 5) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.25 }}
             className="lg:col-span-5 flex justify-center w-full"
@@ -143,7 +209,7 @@ export default function HeroSection() {
                   <div className="absolute -inset-2 rounded-3xl border border-[#C7A052]/40 animate-[spin_20s_linear_infinite]" />
                   <img
                     src="/logo.png"
-                    alt="Madhav Garg Logo"
+                    alt="Madhav Garg Official Monogram Logo"
                     className="w-full h-full object-contain"
                   />
                 </div>

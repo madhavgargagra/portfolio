@@ -95,7 +95,7 @@ if (lungCancer) {
   assertCondition('Lung Cancer has SVM & KNN', lcTechs.includes('SVM') && lcTechs.includes('KNN'));
   assertCondition('Lung Cancer has Logistic Regression', lcTechs.includes('Logistic Regression'), `Techs: ${lcTechs}`);
   assertCondition('Lung Cancer has educational / non-clinical disclaimer', Boolean(lungCancer.disclaimer) && lungCancer.disclaimer.includes('NOT clinically validated'));
-  assertCondition('Lung Cancer liveDemo is false (no invented demo)', lungCancer.links.liveDemo.isAvailable === false && lungCancer.links.liveDemo.url === null);
+  assertCondition('Lung Cancer liveDemo is verified Render URL', lungCancer.links.liveDemo.isAvailable === true && lungCancer.links.liveDemo.url === 'https://lung-cancer-prediction-le1p.onrender.com/');
   assertCondition('Lung Cancer repo is public GitHub URL', lungCancer.links.github.url === 'https://github.com/madhavgargagra/Lung-Cancer-Prediction-and-web-application');
 }
 

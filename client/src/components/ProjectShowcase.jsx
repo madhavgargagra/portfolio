@@ -203,17 +203,22 @@ export default function ProjectShowcase() {
                       </span>
                     )}
 
-                    {/* Live Demo Link (if available) */}
-                    {project.links.liveDemo.isAvailable && (
+                    {/* Live Demo Link (Featured for EcoSort, or explicit status label) */}
+                    {project.links.liveDemo.isAvailable ? (
                       <a
                         href={project.links.liveDemo.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl border border-[#C7A052]/60 hover:bg-[#C7A052] hover:text-white text-xs font-mono text-[#C7A052] transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-xl border border-[#C7A052] bg-[#C7A052]/10 hover:bg-[#C7A052] hover:text-white text-xs font-mono font-medium text-[#C7A052] transition-colors shadow-xs"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Demo</span>
+                        <span>Live Demo</span>
                       </a>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-2 text-[11px] font-mono text-[#252522]/50 dark:text-[#E6E4DE]/50 select-none">
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500" />
+                        <span>No public live demo</span>
+                      </span>
                     )}
                   </div>
 

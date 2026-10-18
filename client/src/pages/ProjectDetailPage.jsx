@@ -164,16 +164,21 @@ export default function ProjectDetailPage() {
                 </div>
               )}
 
-              {project.links.liveDemo.isAvailable && (
+              {project.links.liveDemo.isAvailable ? (
                 <a
                   href={project.links.liveDemo.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl border border-[#C7A052] text-[#C7A052] text-xs font-mono font-medium hover:bg-[#C7A052] hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl border border-[#C7A052] bg-[#C7A052]/10 hover:bg-[#C7A052] hover:text-white text-[#C7A052] text-xs font-mono font-medium transition-colors shadow-xs"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
-                  <span>{project.links.liveDemo.label}</span>
+                  <span>{project.links.liveDemo.label || 'Launch Live Demo'}</span>
                 </a>
+              ) : (
+                <div className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-[#252522]/5 dark:bg-white/5 border border-[#252522]/10 dark:border-white/10 text-xs font-mono text-[#252522]/60 dark:text-[#E6E4DE]/60 select-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500" />
+                  <span>{project.links.liveDemo.label || 'No Public Live Demo'}</span>
+                </div>
               )}
             </div>
 

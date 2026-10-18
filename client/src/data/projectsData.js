@@ -78,7 +78,8 @@ export const projectsData = [
         label: 'Live GitHub Pages Demo',
       },
     },
-    badge: 'Open Source',
+    badge: 'Featured Live Demo',
+    isPrimaryDemo: true,
   },
   {
     slug: 'lung-cancer-prediction',
@@ -142,12 +143,12 @@ export const projectsData = [
         label: 'GitHub Repository',
       },
       liveDemo: {
-        url: null,
-        isAvailable: false,
-        label: 'No Public Demo (Academic Research)',
+        url: 'https://lung-cancer-prediction-le1p.onrender.com/',
+        isAvailable: true,
+        label: 'Live Web Demo (Render)',
       },
     },
-    badge: 'Academic Research',
+    badge: 'Live ML Demo',
   },
   {
     slug: 'insider-threat-detection',

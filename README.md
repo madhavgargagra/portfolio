@@ -2,6 +2,10 @@
 
 A full-stack personal developer portfolio built with the modern **MERN** stack (**M**ongoDB, **E**xpress.js, **R**eact 19, **N**ode.js). Designed with a warm editorial aesthetic—featuring warm ivory (`#F5F0E7`), champagne gold (`#C7A052`), soft charcoal (`#252522`), and muted sand (`#D9CBB7`) in light mode, with deep slate (`#111317` / `#191C22`) in dark mode.
 
+> **🌐 Live Frontend (Vercel):** [https://portfolio-beryl-omega-16pjqhdi8y.vercel.app/](https://portfolio-beryl-omega-16pjqhdi8y.vercel.app/)<br />
+> **⚙️ Backend API (Render):** [https://madhav-portfolio-rpef.onrender.com/](https://madhav-portfolio-rpef.onrender.com/)<br />
+> **📦 Public GitHub Repository:** [https://github.com/madhavgargagra/portfolio](https://github.com/madhavgargagra/portfolio)
+
 ---
 
 ## 🚀 Key Features & Assignment Requirements Overview
@@ -326,23 +330,33 @@ All content is cleanly decoupled into centralized configuration files so you can
 
 ---
 
-## 🧪 Verification & Build Results
+## 🧪 Verification & Audit Commands
 
-1. **Client Production Bundle Build**:
-   ```bash
-   npm run build:client
-   ```
-   - Status: **`✓ built in 1.42s`** (Exit Code `0`).
-   - Bundle Assets: `dist/index.html`, `dist/assets/index-DV2Q8QXh.css`, `dist/assets/index-DmB89Y-i.js`.
-2. **Backend API Health Check**:
-   - Verified active and responding with `GET /api/health` (`200 OK`).
-3. **Unified SPA Serving Check**:
-   - Verified Express serves `client/dist/index.html` on `http://localhost:5000/`.
-4. **Static PDF Asset Check**:
-   - Verified `GET /public/resumes/madhav-garg-resume.pdf` returns `200 OK` (`application/pdf`).
-5. **Contact Route Validation & Offline Database Fallback Check**:
-   - Verified input sanitization and inline validation for Name, Email, and Message.
-   - Verified graceful 503 fallback when MongoDB is not running locally, retaining form input so no student data is lost.
+Run the full portable audit suite to verify academic consistency, artifact validity, and bundle security:
+
+```bash
+# 1. Full Production Build (Client + Server)
+npm run build
+
+# 2. Website Data & Academic Credentials Audit (50 checks)
+node server/scripts/auditWebsiteData.js
+
+# 3. Resume PDF & DOCX Artifacts Verification (48 checks)
+python server/scripts/auditResumeArtifacts.py
+
+# 4. Client Bundle Security & Zero-Leak Audit
+node server/scripts/auditSecurityBundle.js
+
+# 5. Git Diff & Whitespace Verification
+git diff --check
+```
+
+### Verified Checks Summary
+- **Client Production Bundle Build**: Vite compiled successfully in `~1.5s` (Exit Code `0`).
+- **Backend API Health Check**: `GET /api/health` returns `200 OK` with database status.
+- **Unified SPA Serving Check**: Express serves compiled React client from root `/`.
+- **Static Resume Downloads**: Both `madhav-garg-resume.pdf` (`2-page`) and `madhav-garg-resume.docx` (`OpenXML`) download with correct MIME types and content-disposition headers.
+- **Contact Route Validation**: Input sanitization, email regex validation, IP rate limiting, and graceful 503 fallback when database is disconnected.
 
 ---
 
